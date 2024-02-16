@@ -1,3 +1,85 @@
 <resources>
-    <string name="app_name">Scrabble</string>
+    <string name="app_name">SCRABBLE</string>
+
+    <!-- 1ère page -->
+    <string name="first_page_title">SCRABBLE</string>
+    <string name="first_page_connexion_button">Connexion</string>
+    <string name="first_page_inscription_button">Inscription</string>
+
+    <!-- Page de connexion -->
+    <string name="connexion_page_title">Connexion</string>
+    <string name="connexion_page_identifiant_input">Identifiant</string>
+    <string name="connexion_page_mot_de_passe_input">Mot de passe</string>
+    <string name="connexion_page_ok_button">OK</string>
+
+    <!-- Page d'inscription -->
+    <string name="inscription_page_title">Inscription</string>
+    <string name="inscription_page_username_input">Nom d\'utilisateur</string>
+    <string name="inscription_page_mail_input">Adresse mail</string>
+    <string name="inscription_page_mot_de_passe_input">Mot de passe</string>
+    <string name="inscription_page_confirmer_mot_de_passe_input">Confirmer le mot de passe</string>
+    <string name="inscription_page_ok_button">OK</string>
+
+    <!-- Accueil -->
+    <string name="welcome_page_title">Bienvenue !</string>
+    <string name="welcome_page_new_game_button">Nouvelle partie</string>
+    <string name="welcome_page_join_game_button">Rejoindre une partie</string>
+    <string name="welcome_page_ia_game_button">Jouer contre l\'IA</string>
+
+
+    <!-- Nouvelle partie -->
+    <string name="new_game_page_title">Nouvelle partie</string>
+    <string name="new_game_page_id_input">Identifiant de la partie</string>
+    <string name="new_game_page_join_nbplayers">Nombre de joueurs</string>
+    <string name="new_game_page_2players_button">2</string>
+    <string name="new_game_page_3players_button">3</string>
+    <string name="new_game_page_4players_button">4</string>
+    <string name="new_game_page_ok_button">OK</string>
+
+    <!-- Rejoindre une partie -->
+    <string name="join_game_page_title">Rejoindre une partie</string>
+    <string name="join_game_page_id_input">Identifiant de la partie</string>
+    <string name="join_game_page_ok1_button">OK</string>
+    <string name="join_game_page_join_nbplayers">Nombre de joueurs</string>
+    <string name="join_game_page_2players_button">2</string>
+    <string name="join_game_page_3players_button">3</string>
+    <string name="join_game_page_4players_button">4</string>
+    <string name="join_game_page_ok2_button">OK</string>
+
+    <!-- Partie : tour adversaire -->
+    <string name="opponent_turn_page_title">Tour de ?</string>
+    <string name="opponent_turn_page_id_time"> 0:30</string>
+
+    <!-- Partie : votre adversaire -->
+    <string name="your_turn_page_title">Votre tour</string>
+    <string name="your_turn_page_id_time"> 0:30</string>
+    <string name="your_turn_page_validate">Valider</string>
+    <string name="your_turn_page_pass_button">Passer votre tour</string>
+
+    <!-- Résultats - défaite-->
+    <string name="result_defeat_page_title">Résultats</string>
+    <string name="result_defeat_page_id_ranking">Classement :</string>
+    <string name="result_defeat_page_player1">Joueur 1</string>
+    <string name="result_defeat_page_player2">Joueur 2</string>
+    <string name="result_defeat_page_player3">Joueur 2</string>
+    <string name="result_defeat_page_player4">Joueur 4</string>
+    <string name="result_defeat_page_score1">Score 1</string>
+    <string name="result_defeat_page_score2">Score 2</string>
+    <string name="result_defeat_page_score3">Score 3</string>
+    <string name="result_defeat_page_score4">Score 4</string>
+    <string name="result_defeat_page_ok_button">OK</string>
+
+    <!-- Résultats - victoire-->
+    <string name="result_win_page_title">Victoire !</string>
+    <string name="result_win_page_id_ranking">Classement :</string>
+    <string name="result_win_page_player1">Joueur 1</string>
+    <string name="result_win_page_player2">Joueur 2</string>
+    <string name="result_win_page_player3">Joueur 2</string>
+    <string name="result_win_page_player4">Joueur 4</string>
+    <string name="result_win_page_score1">Score 1</string>
+    <string name="result_win_page_score2">Score 2</string>
+    <string name="result_win_page_score3">Score 3</string>
+    <string name="result_win_page_score4">Score 4</string>
+    <string name="result_win_page_ok_button">OK</string>
+
 </resources>
