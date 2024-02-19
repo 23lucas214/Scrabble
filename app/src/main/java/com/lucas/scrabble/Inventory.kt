@@ -4,7 +4,6 @@ import kotlin.random.Random
 
 class Inventory {
     private var score : Int = 0
-    private var scrabble : Boolean = false //remettre false apres chaque tour de jeu
 
     /**
      * Main d'un joueur
@@ -29,7 +28,19 @@ class Inventory {
         return lettre
     }
 
-    fun calculPointsMot(mot: Pair<String,MutableList<Pair<Int,Int>>>, plateauDebutTour: Plateau, jeu : Jeu): Int{
+    /**
+     * Calcul les points generes a un tour
+     */
+    fun calculPointsMot(plateauDebutTour: Plateau, plateauFinTour: Plateau, jeu : Jeu): Int{
+        var lettrePosees = 0
+        for (i in 0..14){
+            for (j in 0..14){
+                if (plateauFinTour.getCase(Pair(i, j)) != plateauDebutTour.getCase(Pair(i, j))){
+                    lettrePosees += 1
+                }
+            }
+        }
+        val mot = plateauFinTour.motsAjoutes(plateauDebutTour).get(0)
         var scoreMot = 0
         var multiplicateurLettre = 1
         var multiplicateurMot = 1
@@ -52,25 +63,21 @@ class Inventory {
             scoreMot += multiplicateurLettre * jeu.lettrePoints(mot.first[k].toString())
             multiplicateurLettre = 1
         }
-        score += scoreMot * multiplicateurMot
-        return scoreMot * multiplicateurMot
-        //Scrabble
+        val scrabble = if(lettrePosees==7) 1 else 0
+        score += scoreMot * multiplicateurMot + scrabble * 50
+        return scoreMot * multiplicateurMot + scrabble * 50
     }
 
     /**
-     * Fonction qui renvoie la liste des mots ajoutes durant un tour
+     * Pose une lettre de la main sur un plateau
      */
-    fun motsAjoutes(plateauDebutTour: Plateau, plateauFinTour: Plateau): MutableList<Pair<String, MutableList<Pair<Int, Int>>>>{
-        var list = plateauFinTour.listeDeMots()
-        list.removeAll(plateauDebutTour.listeDeMots())
-        return list
-    }
-
-
     fun poserLettre(index: Int, plateau: Plateau, position: Pair<Int,Int>){
         plateau.setCase(position, main.removeAt(index))
     }
 
+    /**
+     * Permet de recuperer une piece posee pendant le tour
+     */
     fun recupererLettre(position: Pair<Int,Int>, plateauDebutTour: Plateau, plateauActu: Plateau){
         if(plateauActu.getCase(position) != plateauDebutTour.getCase(position)) {
             main.add(plateauActu.getCase(position))
@@ -78,11 +85,18 @@ class Inventory {
         }
     }
 
+    /**
+     *Echange deux lettres dans l'inventaire pour les ordonner
+     */
     fun deplacerLettreInv(index1: Int, index2: Int){
         val l = main.get(index1)
         main.set(index1, main.get(index2))
         main.set(index2, l)
     }
+
+    /**
+     * Defausser une piece
+     */
     fun echangeDeLettre(index: Int, pioche: MutableList<String>){
         val tempo = main.removeAt(index)
         tirerNLettres(1, pioche)

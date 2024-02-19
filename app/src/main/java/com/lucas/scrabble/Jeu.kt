@@ -1,6 +1,7 @@
 package com.lucas.scrabble
 
 import java.io.File
+import kotlin.random.Random
 
 class Jeu {
 
@@ -75,5 +76,49 @@ class Jeu {
         try {
             File(fichier).forEachLine { dictionnaire.add(it) }
         }catch(e: Exception){print(e)}
+    }
+
+    fun tourDejeu(pseudo: String, plateauDebutTour: Plateau, plateauFinTour: Plateau, firstTurn: Boolean = false){
+        while (!plateauFinTour.verifierAjoutPlateau(plateauDebutTour, this, firstTurn)){
+
+        } //
+    }
+
+    fun jeu(listPseudosTemp : MutableList<String>){
+
+        //Tirer au sort l'ordre de jeu
+        var alea : Int
+        var listPseudos = mutableListOf<String>()
+        while (listPseudosTemp.isNotEmpty()){
+            alea = Random.nextInt(listPseudosTemp.size)
+            listPseudos.add(listPseudosTemp.removeAt(alea))
+        }
+
+        //Initialisation du jeu
+        initPioche()
+        initDictionnaire("") //lien fichier text
+
+        //Creation des inventaires
+        var inventaires = mutableListOf<Inventory>()
+        for (x in listPseudos){
+            inventaires.add(Inventory())
+            inventaires.get(inventaires.size).tirerNLettres(7, pioche)
+        }
+
+        //Creation des plateaux
+        var plateauDebutTour = Plateau()
+        var plateauFinTour = Plateau()
+        var running = true
+        var turn = 0
+
+        //Turn 0
+        tourDejeu(listPseudos.get(0), plateauFinTour, plateauDebutTour, true)
+
+        //Main loop
+        while (running){
+            turn++
+            tourDejeu(listPseudos.get(turn%listPseudos.size), plateauFinTour, plateauDebutTour)
+            plateauDebutTour.copier(plateauFinTour)
+        }
     }
 }

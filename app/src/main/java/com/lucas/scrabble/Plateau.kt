@@ -33,6 +33,10 @@ class Plateau {
      */
     val collisionOk = listOf("0", "2L", "3L", "2M", "3M", "CD")
 
+    fun copier(plateauACopier: Plateau){
+        this.plateau = plateauACopier.plateau
+    }
+
     /**
      * Verifier si une case est toujours disponible
      */
@@ -89,12 +93,16 @@ class Plateau {
         return plateau[coord.first][coord.second]
     }
 
+    /**
+     * Change le contenu d'une case
+     * En paramètres: coordonnées de la case et son nouveau contenu
+     */
     fun setCase(coord: Pair<Int, Int>, case: String){
         plateau[coord.first][coord.second] = case
     }
 
     /**
-     * Verifie que tous les mots formés sur le plateau sont acceptables
+     * Verifie que tous les mots formes sur le plateau sont acceptables
      * Attention le dictionnaire doit etre initialise
      */
     fun verifierPlateau(jeu: Jeu): Boolean{
@@ -105,7 +113,23 @@ class Plateau {
                 bool = false
             }
         }
-        return false
+        return bool
     }
 
+    /**
+     * Fonction qui renvoie la liste des mots ajoutes durant un tour
+     */
+    fun motsAjoutes(plateauDebutTour: Plateau): MutableList<Pair<String, MutableList<Pair<Int, Int>>>>{
+        var list = listeDeMots()
+        list.removeAll(plateauDebutTour.listeDeMots())
+        return list
+    }
+
+    fun verifierAjoutPlateau(plateauDebutTour: Plateau, jeu: Jeu, firstTurn: Boolean): Boolean{
+        var mots = motsAjoutes(plateauDebutTour)
+        if (mots.size != 1){return false}
+        if (!jeu.dictionnaire.contains(mots.get(0).first)){return false}
+        if (firstTurn){}
+        return true
+    }
 }
