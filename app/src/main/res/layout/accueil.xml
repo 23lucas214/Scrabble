@@ -19,7 +19,7 @@
         android:gravity="center"
         android:padding="80dp"
         android:text="@string/welcome_page_title"
-        android:textColor="@color/white"
+        style="@style/TitleTextStyle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
