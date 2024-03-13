@@ -14,18 +14,22 @@ import android.widget.GridLayout
 
 class PlateauDeJeuActivity : AppCompatActivity() {
 
+    private lateinit var plateauDeJeu: PlateauDeJeu
     private lateinit var selectedLetter: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_plateau)
 
-        // Inclure le plateau de jeu
+        // Instancie le plateau de jeu
+        plateauDeJeu = PlateauDeJeu()
+
+        // Inclut le plateau de jeu
         val plateauDeJeuLayout: RelativeLayout = findViewById(R.id.plateauDeJeuLayout)
         val plateauDeJeuView = LayoutInflater.from(this).inflate(R.layout.plateau_de_jeu, null)
         plateauDeJeuLayout.addView(plateauDeJeuView)
 
-        // Inclure la main du joueur
+        // Inclut la main du joueur
         val playerHandLayout: LinearLayout = findViewById(R.id.playerHandLayout)
         val playerHandView = LayoutInflater.from(this).inflate(R.layout.player_hand, null)
         playerHandLayout.addView(playerHandView)
@@ -33,7 +37,7 @@ class PlateauDeJeuActivity : AppCompatActivity() {
         // Ajout de lettres à la main du joueur
         val playerHand = listOf('A', 'B', 'C', 'D', 'E', 'F', 'G')
 
-        // Créer une vue pour chaque lettre dans la main du joueur
+        // Crée une vue pour chaque lettre dans la main du joueur
         playerHand.forEach { letter ->
             val textView = TextView(this)
             textView.text = letter.toString()
@@ -42,7 +46,7 @@ class PlateauDeJeuActivity : AppCompatActivity() {
             textView.setBackgroundColor(ContextCompat.getColor(this, R.color.brown))
             textView.setPadding(16, 16, 16, 16)
 
-            // Ajoutez une marge entre les lettres
+            // Ajoute une marge entre les lettres
             val params = LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.WRAP_CONTENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
@@ -54,13 +58,13 @@ class PlateauDeJeuActivity : AppCompatActivity() {
             textView.setOnClickListener {
                 // Code pour gérer le clic sur une lettre de la main du joueur
 
-                // Récupérer la lettre du TextView cliqué
+                // Récupère la lettre du TextView cliqué
                 selectedLetter = (it as TextView).text.toString()
 
-                // Changer la couleur de fond pour indiquer que la lettre a été sélectionnée
+                // Change la couleur de fond pour indiquer que la lettre a été sélectionnée
                 it.setBackgroundColor(ContextCompat.getColor(this, R.color.lightbrown))
 
-                // Ajouter un écouteur de clic à chaque case du plateau
+                // Ajoute un écouteur de clic à chaque case du plateau
                 val plateauDeJeu = findViewById<GridLayout>(R.id.boardGridLayout)
                 for (i in 0 until plateauDeJeu.childCount) {
                     val case = plateauDeJeu.getChildAt(i)
