@@ -4,21 +4,14 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <!-- Plateau de jeu -->
+    <!-- Inclusion du plateau de jeu -->
     <include
-        android:id="@+id/plateau_de_jeu"
         layout="@layout/plateau_de_jeu"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerInParent="true" />
+        android:id="@+id/plateauDeJeuLayout"/>
 
-    <!-- Main du joueur -->
+    <!-- Inclusion de la main du joueur -->
     <include
-        android:id="@+id/player_hand"
         layout="@layout/player_hand"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/plateau_de_jeu"
-        android:layout_marginTop="16dp" />
+        android:id="@+id/playerHandLayout"/>
 
 </RelativeLayout>
