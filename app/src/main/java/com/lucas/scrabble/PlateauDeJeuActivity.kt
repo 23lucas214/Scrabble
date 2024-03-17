@@ -9,32 +9,47 @@ import android.view.Gravity
 import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
 import android.view.LayoutInflater
-import android.view.View
 import android.widget.GridLayout
 
 
 
 class PlateauDeJeuActivity : AppCompatActivity() {
 
-    private lateinit var plateauDeJeu: PlateauDeJeu
     private lateinit var selectedLetter: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_plateau)
 
-        // Instancie le plateau de jeu
-        //plateauDeJeu = PlateauDeJeu()
+        val boardGridLayout: GridLayout = findViewById(R.id.boardGridLayout)
 
-        // Inclut le plateau de jeu
-        //val plateauDeJeuLayout: RelativeLayout = findViewById(R.id.plateauDeJeuLayout)
-        //val plateauDeJeuView = LayoutInflater.from(this).inflate(R.layout.plateau_de_jeu, null)
-        //plateauDeJeuLayout.addView(plateauDeJeuView)
+        // Création du plateau de jeu
+        for (row in 0 until 15) {
+            for (col in 0 until 15) {
+                val textView = TextView(this)
+                val params = GridLayout.LayoutParams()
+                params.rowSpec = GridLayout.spec(row)
+                params.columnSpec = GridLayout.spec(col)
+                textView.layoutParams = params
+                textView.width = 50 // Taille d'une case en pixels
+                textView.height = 50
+                textView.text = ""
+                textView.textAlignment = TextView.TEXT_ALIGNMENT_CENTER
+                textView.setBackgroundColor(getCellColor(row, col))
+                textView.setTextColor(Color.BLACK)
+                boardGridLayout.addView(textView)
+            }
+        }
 
         // Inclut la main du joueur
         val playerHandLayout: LinearLayout = findViewById(R.id.playerHandLayout)
         val playerHandView = LayoutInflater.from(this).inflate(R.layout.player_hand, null)
         playerHandLayout.addView(playerHandView)
+
+        // Inclut le plateau de jeu
+        val plateauDeJeuLayout: RelativeLayout = findViewById(R.id.plateauDeJeuLayout)
+        val plateauDeJeuView = LayoutInflater.from(this).inflate(R.layout.plateau_de_jeu, null)
+        plateauDeJeuLayout.addView(plateauDeJeuView)
 
         // Ajout de lettres à la main du joueur
         val playerHand = listOf('A', 'B', 'C', 'D', 'E', 'F', 'G')
@@ -81,34 +96,7 @@ class PlateauDeJeuActivity : AppCompatActivity() {
             playerHandLayout.addView(textView)
         }
     }
-}
 
-class PlateauDeJeu : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.plateau_de_jeu)
-
-        val boardGridLayout: GridLayout = findViewById(R.id.boardGridLayout)
-
-        // Création du plateau de jeu
-        for (row in 0 until 15) {
-            for (col in 0 until 15) {
-                val textView = TextView(this)
-                val params = GridLayout.LayoutParams()
-                params.rowSpec = GridLayout.spec(row)
-                params.columnSpec = GridLayout.spec(col)
-                params.setMargins(5, 5, 5, 5)
-                textView.layoutParams = params
-                textView.width = 60 // Taille d'une case en pixels
-                textView.height = 60
-                textView.text = ""
-                textView.textAlignment = TextView.TEXT_ALIGNMENT_CENTER
-                textView.setBackgroundColor(getCellColor(row, col))
-                textView.setTextColor(Color.BLACK)
-                boardGridLayout.addView(textView)
-            }
-        }
-    }
 
     private fun getCellColor(row: Int, col: Int): Int {
         // Logique pour déterminer la couleur de chaque case du plateau (par exemple, cases spéciales)
@@ -117,7 +105,7 @@ class PlateauDeJeu : AppCompatActivity() {
             isSpecialCase1(row, col) -> ContextCompat.getColor(this, R.color.red)
             isSpecialCase2(row, col) -> ContextCompat.getColor(this, R.color.blue)
             isSpecialCase3(row, col) -> ContextCompat.getColor(this, R.color.green)
-            else -> ContextCompat.getColor(this, R.color.grey)
+            else -> ContextCompat.getColor(this,R.color.grey)
         }
     }
 
