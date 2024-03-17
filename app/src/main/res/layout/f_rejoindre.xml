@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <!-- Heading -->
+    <TextView
+        android:id="@+id/tvJoinGame"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/green"
+        android:text="Rejoindre une partie"
+        android:textColor="@color/white"
+        android:gravity="center"
+        android:textSize="24sp"
+        android:padding="40dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <!-- Partie entre amis section -->
+
+    <TextView
+        android:id="@+id/tvPrivateGame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="100dp"
+        android:text="Partie entre amis:"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvJoinGame" />
+
+    <EditText
+        android:id="@+id/etGameId"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="Identifiant de la partie"
+        android:background="@drawable/edittext_background"
+        android:padding="12dp"
+        app:layout_constraintTop_toBottomOf="@id/tvPrivateGame"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintWidth_percent="0.8"/>
+
+    <!-- Partie avec inconnus section -->
+
+    <!-- Player number buttons -->
+    <!-- Replace with a RadioGroup or custom view for better usability -->
+
+    <TextView
+        android:id="@+id/tvPublicGame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Partie avec inconnus:"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        tools:layout_editor_absoluteY="314dp" />
+
+    <TextView
+        android:id="@+id/tvNumberOfPlayers"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@drawable/edittext_background"
+        android:hint="Nombre de joueurs"
+        android:padding="12dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvPublicGame"
+        app:layout_constraintWidth_percent="0.8" />
+
+    <Button
+        android:id="@+id/btnTwoPlayers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="48dp"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/button_background_pink"
+        android:text="2"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvNumberOfPlayers" />
+
+    <Button
+        android:id="@+id/btnThreePlayers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/button_background_pink"
+        android:text="3"
+        app:layout_constraintStart_toEndOf="@id/btnTwoPlayers"
+        app:layout_constraintTop_toBottomOf="@id/tvNumberOfPlayers" />
+
+    <Button
+        android:id="@+id/btnFourPlayers"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="32dp"
+        android:background="@drawable/button_background_pink"
+        android:text="4"
+        app:layout_constraintStart_toEndOf="@id/btnThreePlayers"
+        app:layout_constraintTop_toBottomOf="@id/tvNumberOfPlayers" />
+
+    <Button
+        android:id="@+id/btnJoinPublicGame"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="96dp"
+        android:background="@drawable/button_background_green"
+        android:text="OK"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.498"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnFourPlayers" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
