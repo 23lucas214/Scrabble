@@ -27,8 +27,8 @@
 
     <TextView
         android:id="@+id/tvConnexion"
-        android:layout_width="412dp"
-        android:layout_height="163dp"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
         android:background="@color/green"
         android:padding="60dp"
         android:text="Connexion"
@@ -37,7 +37,7 @@
         android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/tvNumberOfPlayersLabel"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.0" />
@@ -76,7 +76,7 @@
         android:id="@+id/btnOk"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/button_background_green"
+        android:backgroundTint="@color/green"
         android:text="OK"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
