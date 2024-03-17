@@ -1,6 +1,8 @@
+
 package com.lucas.scrabble
 
 import android.graphics.Color
+import android.graphics.drawable.GradientDrawable
 import android.os.Bundle
 import android.widget.LinearLayout
 import android.widget.TextView
@@ -31,11 +33,17 @@ class PlateauDeJeuActivity : AppCompatActivity() {
                 params.rowSpec = GridLayout.spec(row)
                 params.columnSpec = GridLayout.spec(col)
                 textView.layoutParams = params
-                textView.width = 50 // Taille d'une case en pixels
-                textView.height = 50
+                params.setMargins(6, 6, 6, 6)
+                textView.width = 55 // Taille d'une case en pixels
+                textView.height = 55
                 textView.text = ""
                 textView.textAlignment = TextView.TEXT_ALIGNMENT_CENTER
                 textView.setBackgroundColor(getCellColor(row, col))
+                val shape = GradientDrawable()
+                shape.shape = GradientDrawable.RECTANGLE
+                shape.setColor(getCellColor(row, col))
+                shape.cornerRadius = 7f // Définir le rayon pour arrondir les coins
+                textView.background = shape
                 textView.setTextColor(Color.BLACK)
                 boardGridLayout.addView(textView)
             }
