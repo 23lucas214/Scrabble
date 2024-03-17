@@ -2,6 +2,7 @@ package com.lucas.scrabble
 
 import android.graphics.Color
 import android.os.Bundle
+import android.graphics.drawable.GradientDrawable
 import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
