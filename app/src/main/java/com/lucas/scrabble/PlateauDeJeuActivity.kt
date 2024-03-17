@@ -37,11 +37,11 @@ class PlateauDeJeuActivity : AppCompatActivity() {
                 textView.text = ""
                 textView.textAlignment = TextView.TEXT_ALIGNMENT_CENTER
                 textView.setBackgroundColor(getCellColor(row, col))
-                val shape = GradientDrawable()
+                /*val shape = GradientDrawable()
                 shape.shape = GradientDrawable.RECTANGLE
                 shape.setColor(getCellColor(row, col))
                 shape.cornerRadius = 7f // Définir le rayon pour arrondir les coins
-                textView.background = shape
+                textView.background = shape*/
                 textView.setTextColor(Color.BLACK)
                 boardGridLayout.addView(textView)
             }
@@ -102,6 +102,9 @@ class PlateauDeJeuActivity : AppCompatActivity() {
             playerHandLayout.addView(textView)
         }
     }
+
+
+    //////////Coloration//////////
 
 
     private fun getCellColor(row: Int, col: Int): Int {
