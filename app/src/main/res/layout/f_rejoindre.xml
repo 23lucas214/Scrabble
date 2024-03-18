@@ -32,10 +32,9 @@
         android:id="@+id/tvPrivateGame"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="56dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="84dp"
         android:text="Partie entre amis:"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvJoinGame" />
 
@@ -43,9 +42,11 @@
         android:id="@+id/etGameId"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:background="@drawable/edittext_background"
         android:hint="Identifiant de la partie"
         android:padding="12dp"
+        android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvPrivateGame"
@@ -55,67 +56,36 @@
         android:id="@+id/tvPublicGame"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="84dp"
         android:text="Partie avec inconnus:"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="390dp" />
+        app:layout_constraintTop_toBottomOf="@id/etGameId" />
 
     <TextView
         android:id="@+id/tvNumberOfPlayers"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         android:background="@drawable/edittext_background"
         android:hint="Nombre de joueurs"
         android:padding="12dp"
+        android:inputType="number"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvPublicGame"
         app:layout_constraintWidth_percent="0.8" />
 
     <Button
-        android:id="@+id/btnTwoPlayers"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="48dp"
-        android:layout_marginTop="32dp"
-        android:background="@drawable/button_background_pink"
-        android:text="2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvNumberOfPlayers" />
-
-    <Button
-        android:id="@+id/btnThreePlayers"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="32dp"
-        android:background="@drawable/button_background_pink"
-        android:text="3"
-        app:layout_constraintStart_toEndOf="@id/btnTwoPlayers"
-        app:layout_constraintTop_toBottomOf="@id/tvNumberOfPlayers" />
-
-    <Button
-        android:id="@+id/btnFourPlayers"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="32dp"
-        android:background="@drawable/button_background_pink"
-        android:text="4"
-        app:layout_constraintStart_toEndOf="@id/btnThreePlayers"
-        app:layout_constraintTop_toBottomOf="@id/tvNumberOfPlayers" />
-
-    <Button
         android:id="@+id/btnJoinPublicGame"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="96dp"
         android:backgroundTint="@color/green"
         android:text="OK"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.498"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btnFourPlayers" />
+        tools:layout_editor_absoluteY="556dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
 
