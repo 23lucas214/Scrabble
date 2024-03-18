@@ -94,6 +94,7 @@ class Jeu {
         stmt.setInt(4,id)
         stmt.executeUpdate()
 
+        /*
         request = "UPDATE piece SET id_piece=?,lettre=?,X=?,Y=? WHERE id_partie=?" //pièce
         stmt = connect.prepareStatement(request)
         stmt.setInt(1, ) //????
@@ -101,6 +102,7 @@ class Jeu {
         stmt.setString(3, )
         stmt.setInt(5,id)
         stmt.executeUpdate()
+         */
 
         request = "UPDATE pioche SET lettre=?,nbLettre=? WHERE id_partie=?" //pioche
         for(i in 1..pioche.size) {
@@ -127,7 +129,7 @@ class Jeu {
     fun majJoueurs(compte : Compte){ // a faire dès qu'on trouve une modif dans la base de données
 
     }
-    fun tourDejeu(compte : Compte, joueur : Inventory, pseudo: String, nextPseudo: String, plateauDebutTour: Plateau, plateauFinTour: Plateau, firstTurn: Boolean = false){
+    fun tourDejeu(id : Int, compte : Compte, joueur : Inventory, pseudo: String, nextPseudo: String, plateauDebutTour: Plateau, plateauFinTour: Plateau, firstTurn: Boolean = false){
         var request = ""
         var resultat = ""
         var res1 = ""
@@ -149,7 +151,7 @@ class Jeu {
             // fin du tour :
             joueur.setPoints(joueur.calculPointsMot(plateauDebutTour,plateauFinTour, this))
             joueur.setScore(joueur.getScore()+joueur.getPoints())
-            majBDON(compte, joueur) //maj des données
+            majBDON(compte, joueur, id) //maj des données
             request = "UPDATE partie SET tour=?" //maj du pseudo pour qui c'est le tour
             stmt = connect.prepareStatement(request)
             stmt.setString(1, nextPseudo)
@@ -261,12 +263,12 @@ class Jeu {
         initPioche()
 
         //Turn 0
-        tourDejeu(compte, listInventories.get(0), listJoueurs.get(0).getPseudo(), listJoueurs.get(1).getPseudo(), plateauFinTour, plateauDebutTour, true)
+        tourDejeu(id, compte, listInventories.get(0), listJoueurs.get(0).getPseudo(), listJoueurs.get(1).getPseudo(), plateauFinTour, plateauDebutTour, true)
 
         //Main loop
         while (running){
             turn++
-            tourDejeu(compte, listInventories.get(turn%listInventories.size), listInventories.get(turn%listInventories.size).getPseudo(), nextInList(listInventories, turn%listInventories.size), plateauFinTour, plateauDebutTour)
+            tourDejeu(id, compte, listInventories.get(turn%listInventories.size), listInventories.get(turn%listInventories.size).getPseudo(), nextInList(listInventories, turn%listInventories.size), plateauFinTour, plateauDebutTour)
             plateauDebutTour.copier(plateauFinTour)
         }
         compte.disconnect()
