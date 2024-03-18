@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:state_pressed="true">
+        <!-- Slightly darker green color for pressed state -->
+        <shape>
+            <solid android:color="#004d40" />
+            <corners android:radius="16dp" />
+        </shape>
+    </item>
+    <item>
+        <!-- Default state -->
+        <shape>
+            <solid android:color="@color/green" /> <!-- Your desired green color -->
+            <corners android:radius="16dp" />
+        </shape>
+    </item>
+</selector>

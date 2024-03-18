@@ -1,0 +1,182 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white">
+
+    <TextView
+        android:id="@+id/tvScrabbleTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:background="@color/green"
+        android:text="SCRABBLE"
+        android:textAlignment="center"
+        android:textColor="@color/white"
+        android:textSize="36sp"
+        android:padding="50dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+    <!-- Letters S, C, R, A, B, B, L, E -->
+    <!-- You will need to position each TextView individually or use a GridLayout/LinearLayout -->
+    <!-- Example for the letter S -->
+
+    <Button
+        android:id="@+id/btnLogin"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="80dp"
+        android:background="@drawable/button_background_pink"
+        android:text="Connexion"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvScrabbleTitle"
+        app:layout_constraintWidth_percent="0.8" />
+
+    <Button
+        android:id="@+id/btnRegister"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:background="@drawable/button_background_pink"
+        android:text="Inscription"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnLogin"
+        app:layout_constraintWidth_percent="0.8" />
+
+    <TextView
+        android:id="@+id/tvLetterS"
+        android:layout_width="47dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="128dp"
+        android:background="@drawable/letter_background"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="S"
+        android:textColor="@color/green"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.076"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnRegister" />
+
+    <TextView
+        android:id="@+id/tvLetterC"
+        android:layout_width="47dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="80dp"
+        android:background="@drawable/letter_background"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="C"
+        android:textColor="@color/green"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.258"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnRegister" />
+
+    <TextView
+        android:id="@+id/tvLetterR"
+        android:layout_width="47dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="172dp"
+        android:background="@drawable/letter_background"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="R"
+        android:textColor="@color/green"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.31"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnRegister" />
+
+    <TextView
+        android:id="@+id/tvLetterA"
+        android:layout_width="47dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="100dp"
+        android:background="@drawable/letter_background"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="A"
+        android:textColor="@color/green"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.472"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnRegister" />
+
+    <TextView
+        android:id="@+id/tvLetterB"
+        android:layout_width="47dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="156dp"
+        android:background="@drawable/letter_background"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="B"
+        android:textColor="@color/green"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.574"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnRegister" />
+
+    <TextView
+        android:id="@+id/tvLetterB"
+        android:layout_width="47dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="204dp"
+        android:background="@drawable/letter_background"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="B"
+        android:textColor="@color/green"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.771"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnRegister"
+        tools:ignore="DuplicateIds" />
+
+    <TextView
+        android:id="@+id/tvLetterL"
+        android:layout_width="47dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="108dp"
+        android:background="@drawable/letter_background"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="L"
+        android:textColor="@color/green"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.813"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnRegister" />
+
+    <TextView
+        android:id="@+id/tvLetterE"
+        android:layout_width="47dp"
+        android:layout_height="47dp"
+        android:layout_marginTop="172dp"
+        android:background="@drawable/letter_background"
+        android:gravity="center"
+        android:padding="8dp"
+        android:text="E"
+        android:textColor="@color/green"
+        android:textSize="24sp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.942"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/btnRegister" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
