@@ -4,6 +4,8 @@ import kotlin.random.Random
 
 class Inventory {
     private var score : Int = 0
+    private var points : Int = 0
+    private var pseudo : String = ""
 
     /**
      * Main d'un joueur
@@ -17,6 +19,27 @@ class Inventory {
         for (i in 1..n){
             main.add(tirer(L))
         }
+    }
+
+    fun getScore(): Int{
+        return score
+    }
+    fun setScore(score : Int){
+        this.score = score
+    }
+
+    fun getPoints(): Int {
+        return points
+    }
+    fun setPoints(points : Int){
+        this.points = points
+    }
+
+    fun getPseudo(): String {
+        return pseudo
+    }
+    fun setPseudo(pseudo : String){
+        this.pseudo = pseudo
     }
 
     /**

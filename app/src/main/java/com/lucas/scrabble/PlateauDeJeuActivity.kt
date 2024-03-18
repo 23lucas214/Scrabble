@@ -1,5 +1,6 @@
 package com.lucas.scrabble
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import android.graphics.drawable.GradientDrawable
@@ -10,6 +11,7 @@ import android.view.Gravity
 import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
 import android.view.LayoutInflater
+import android.widget.Button
 import android.widget.GridLayout
 
 
@@ -19,6 +21,7 @@ class PlateauDeJeuActivity : AppCompatActivity() {
 
     private lateinit var selectedLetter: String
 
+    @SuppressLint("WrongViewCast")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_plateau)
@@ -100,10 +103,11 @@ class PlateauDeJeuActivity : AppCompatActivity() {
                 }
                 it.setBackgroundColor(ContextCompat.getColor(this, R.color.white))
             }
-
             playerHandLayout.addView(textView)
         }
     }
+
+    //////////jeterLettres//////////
 
 
     //////////Coloration//////////
@@ -168,5 +172,4 @@ class PlateauDeJeuActivity : AppCompatActivity() {
         )
         return specialCases.contains(Pair(row, col))
     }
-
 }

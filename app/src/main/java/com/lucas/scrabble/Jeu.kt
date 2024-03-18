@@ -1,6 +1,10 @@
 package com.lucas.scrabble
 
 import java.io.File
+import java.sql.Connection
+import java.sql.DriverManager
+import java.sql.PreparedStatement
+import java.sql.ResultSet
 import kotlin.random.Random
 
 class Jeu {
@@ -78,31 +82,175 @@ class Jeu {
         }catch(e: Exception){print(e)}
     }
 
-    fun tourDejeu(pseudo: String, plateauDebutTour: Plateau, plateauFinTour: Plateau, firstTurn: Boolean = false){
-        while (!plateauFinTour.verifierAjoutPlateau(plateauDebutTour, this, firstTurn)){
+    fun majBDON(compte : Compte, joueur : Inventory, id : Int){ // a faire a la fin de chaque tour de chaque joueur
+        compte.connect()
+        compte.initProperties()
+        var connect = DriverManager.getConnection(compte.url, compte.loginDB, compte.passwordDB)
+        var request = "UPDATE compte SET points=?,scorePartie=?  WHERE pseudo=? AND id_partie=?" //compte
+        var stmt = connect.prepareStatement(request)
+        stmt.setInt(1, joueur.getPoints())
+        stmt.setInt(2,joueur.getScore())
+        stmt.setString(3, joueur.getPseudo())
+        stmt.setInt(4,id)
+        stmt.executeUpdate()
 
-        } //
+        /*
+        request = "UPDATE piece SET id_piece=?,lettre=?,X=?,Y=? WHERE id_partie=?" //pièce
+        stmt = connect.prepareStatement(request)
+        stmt.setInt(1, ) //????
+        stmt.setInt(2,points+joueur.getscorePartie()) //??
+        stmt.setString(3, )
+        stmt.setInt(5,id)
+        stmt.executeUpdate()
+         */
+
+        request = "UPDATE pioche SET lettre=?,nbLettre=? WHERE id_partie=?" //pioche
+        for(i in 1..pioche.size) {
+            stmt = connect.prepareStatement(request)
+            stmt.setString(1, pioche.get(i))
+            stmt.setInt(2, compte(pioche.get(i),pioche))
+            stmt.setInt(3, id)
+            stmt.executeUpdate()
+        }
+
+        compte.disconnect()
     }
 
-    fun jeu(listPseudosTemp : MutableList<String>){
+    fun compte(lettre : String, list : MutableList<String>): Int{
+        var s = 0
+        for(i in 1..list.size){
+            if(list.get(i)==lettre){
+                s++
+            }
+        }
+        return s
+    }
+
+    fun majJoueurs(compte : Compte){ // a faire dès qu'on trouve une modif dans la base de données
+
+    }
+    fun tourDejeu(id : Int, compte : Compte, joueur : Inventory, pseudo: String, nextPseudo: String, plateauDebutTour: Plateau, plateauFinTour: Plateau, firstTurn: Boolean = false){
+        var request = ""
+        var resultat = ""
+        var res1 = ""
+        var finDeTour = 0
+        var rs : ResultSet
+        var stmt : PreparedStatement
+        var connect = DriverManager.getConnection(compte.url, compte.loginDB, compte.passwordDB)
+        request = "SELECT tour FROM partie" //vérifie à qui c'est le tour
+        stmt = connect.prepareStatement(request)
+        rs = stmt.executeQuery()
+        rs.next()
+        resultat = rs.getString(1)
+        res1 = resultat
+        if(pseudo==resultat) {
+            //TOUR DE PSEUDO
+            while(!plateauFinTour.verifierAjoutPlateau(plateauDebutTour, this, firstTurn)){
+                // REMPLIR ICI
+            }
+            // fin du tour :
+            joueur.setPoints(joueur.calculPointsMot(plateauDebutTour,plateauFinTour, this))
+            joueur.setScore(joueur.getScore()+joueur.getPoints())
+            majBDON(compte, joueur, id) //maj des données
+            request = "UPDATE partie SET tour=?" //maj du pseudo pour qui c'est le tour
+            stmt = connect.prepareStatement(request)
+            stmt.setString(1, nextPseudo)
+            stmt.executeUpdate()
+        }
+        else {
+            do {
+                Thread.sleep(3000) // on attend 3 secondes
+                request = "SELECT tour FROM partie" //vérifie à qui c'est le tour
+                stmt = connect.prepareStatement(request)
+                rs = stmt.executeQuery()
+                rs.next()
+                resultat = rs.getString(1)
+            }while(resultat!=res1) // si on a trouvé un changement, on a fini le tour
+            majJoueurs(compte) //on met a jour ses données
+        }
+
+    }
+
+    fun rejoindre(pseudo: String, id : Int){
+        //Gestion BDONN
+        var compte = Compte()
+        compte.initProperties()
+        compte.connect()
+
+        compte.joinGame(id, pseudo)
+        compte.disconnect()
+    }
+
+    fun getRowCount(resultSet: ResultSet): Int {
+        var rowCount = 0
+        while (resultSet.next()) {
+            rowCount++
+        }
+        return rowCount
+    }
+
+    fun jeu(nbjoueurs : Int, id : Int){
+
+        //Gestion BDONN
+        var compte = Compte()
+        compte.initProperties()
+        compte.connect()
+
+        //Création de la partie
+        compte.createNewGame(id,nbjoueurs,pioche)
+
+        //Createur rejoint la partie
+        rejoindre(compte.pseudo,id)
+
+        //Créer la liste des joueurs:
+        var listInventories = mutableListOf<Inventory>()
+
+
+        //Attente de la connexion des joueurs : ECRAN ATTENTE
+        var request = ""
+        var stmt : PreparedStatement
+        var rs : ResultSet
+        var connect = DriverManager.getConnection(compte.url, compte.loginDB, compte.passwordDB)
+
+        do {
+            var nbJoueurs = 0
+            Thread.sleep(3000) // on attend 3 secondes
+            request = "SELECT pseudo FROM compte WHERE id_partie=?"
+            stmt = connect.prepareStatement(request)
+            stmt.setInt(1,id)
+            rs = stmt.executeQuery()
+            rs.next()
+            for(i in 1..getRowCount(rs)) {
+                nbJoueurs ++
+            }
+        }while(nbjoueurs==nbJoueurs)
+
+        //Remplit la liste
+        request = "SELECT pseudo FROM compte WHERE id_partie=?"
+        stmt = connect.prepareStatement(request)
+        stmt.setInt(1,id)
+        rs = stmt.executeQuery()
+        rs.next()
+        for(i in 1..nbjoueurs) {
+            listInventories.get(i).setPseudo(rs.getString(i))
+        }
 
         //Tirer au sort l'ordre de jeu
         var alea : Int
-        var listPseudos = mutableListOf<String>()
-        while (listPseudosTemp.isNotEmpty()){
-            alea = Random.nextInt(listPseudosTemp.size)
-            listPseudos.add(listPseudosTemp.removeAt(alea))
+        var listJoueurs = mutableListOf<Inventory>()
+        while (listInventories.isNotEmpty()){
+            alea = Random.nextInt(listInventories.size)
+            listJoueurs.add(listInventories.get(alea))
+            listInventories.removeAt(alea)
         }
 
         //Initialisation du jeu
         initPioche()
         initDictionnaire("") //lien fichier text
 
-        //Creation des inventaires
-        var inventaires = mutableListOf<Inventory>()
-        for (x in listPseudos){
-            inventaires.add(Inventory())
-            inventaires.get(inventaires.size).tirerNLettres(7, pioche)
+        //Remplissage des inventaires
+        for (x in listInventories){
+            x.tirerNLettres(7, pioche)
         }
 
         //Creation des plateaux
@@ -111,14 +259,26 @@ class Jeu {
         var running = true
         var turn = 0
 
+        //Initialisation de la pioche
+        initPioche()
+
         //Turn 0
-        tourDejeu(listPseudos.get(0), plateauFinTour, plateauDebutTour, true)
+        tourDejeu(id, compte, listInventories.get(0), listJoueurs.get(0).getPseudo(), listJoueurs.get(1).getPseudo(), plateauFinTour, plateauDebutTour, true)
 
         //Main loop
         while (running){
             turn++
-            tourDejeu(listPseudos.get(turn%listPseudos.size), plateauFinTour, plateauDebutTour)
+            tourDejeu(id, compte, listInventories.get(turn%listInventories.size), listInventories.get(turn%listInventories.size).getPseudo(), nextInList(listInventories, turn%listInventories.size), plateauFinTour, plateauDebutTour)
             plateauDebutTour.copier(plateauFinTour)
         }
+        compte.disconnect()
+    }
+
+    fun nextInList(list : MutableList<Inventory>, indice : Int): String{ // renvoie l'indice du prochain joueur à jouer
+        var taille = list.size
+        if(indice==taille){
+            return list.get(0).getPseudo()
+        }
+        else { return list.get(indice+1).getPseudo() }
     }
 }
