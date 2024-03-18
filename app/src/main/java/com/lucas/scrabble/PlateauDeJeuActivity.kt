@@ -1,5 +1,6 @@
 package com.lucas.scrabble
 
+import android.annotation.SuppressLint
 import android.graphics.Color
 import android.os.Bundle
 import android.graphics.drawable.GradientDrawable
@@ -10,7 +11,9 @@ import android.view.Gravity
 import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
 import android.view.LayoutInflater
+import android.widget.Button
 import android.widget.GridLayout
+
 
 
 
@@ -18,6 +21,7 @@ class PlateauDeJeuActivity : AppCompatActivity() {
 
     private lateinit var selectedLetter: String
 
+    @SuppressLint("WrongViewCast")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_plateau)
@@ -100,8 +104,29 @@ class PlateauDeJeuActivity : AppCompatActivity() {
                 it.setBackgroundColor(ContextCompat.getColor(this, R.color.white))
             }
 
+            // Récupérer la référence du bouton btn_poubelle
+            val btnPoubelle = findViewById<Button>(R.id.btn_poubelle)
+            var finAction = 1
+            // Ajouter un écouteur de clic sur le bouton btn_poubelle
+            btnPoubelle.setOnClickListener {
+                // Action à effectuer lors du clic sur le bouton
+                finAction *= -1
+                var list = listOf<String>(selectedLetter)
+                while((finAction<1)&&(list.isNotEmpty())){
+                    can select and unselect lettres
+                    list.add(selectedLetter)
+                }
+                jeterLettres(list, pioche, main) //echange les lettres et met fin au tour de jeu du joueur
+
+            }
             playerHandLayout.addView(textView)
         }
+    }
+
+    //////////jeterLettres//////////
+    fun jeterLettres(selectedLetter : kotlin.collections.mutableListOf<String>(), pioche : kotlin.collections.mutableListOf<String>(), main : mutableListOf<String>()){
+        main.remove(selectedLettre)
+        pioche.add(selectedLetter)
     }
 
 
@@ -167,5 +192,4 @@ class PlateauDeJeuActivity : AppCompatActivity() {
         )
         return specialCases.contains(Pair(row, col))
     }
-
 }

@@ -1,6 +1,10 @@
 package com.lucas.scrabble
 
 import java.io.File
+import java.sql.Connection
+import java.sql.DriverManager
+import java.sql.PreparedStatement
+import java.sql.ResultSet
 import kotlin.random.Random
 
 class Jeu {
@@ -78,10 +82,46 @@ class Jeu {
         }catch(e: Exception){print(e)}
     }
 
-    fun tourDejeu(pseudo: String, plateauDebutTour: Plateau, plateauFinTour: Plateau, firstTurn: Boolean = false){
-        while (!plateauFinTour.verifierAjoutPlateau(plateauDebutTour, this, firstTurn)){
+    fun majBDON(){ // a faire a la fin de chaque tour de chaque joueur
 
-        } //
+    }
+
+    fun majJoueurs(){ // a faire dès qu'on trouve une modif dans la base de données
+
+    }
+    fun tourDejeu(compte : Compte, pseudo: String, nextPseudo: String, plateauDebutTour: Plateau, plateauFinTour: Plateau, firstTurn: Boolean = false){
+        var request = ""
+        var finDeTour = 0
+        var rs : ResultSet
+        var stmt : PreparedStatement
+        var connect = DriverManager.getConnection(compte.url, compte.loginDB, compte.passwordDB)
+        while (!plateauFinTour.verifierAjoutPlateau(plateauDebutTour, this, firstTurn)) {
+
+
+            pseudo = rs.getString(1);
+
+
+            //TOUR DE PSEUDO
+
+
+
+            // fin du tour :
+            majBDON()
+            request = "UPDATE partie SET tour=?"
+            stmt = connect.prepareStatement(request)
+            stmt.setString(1, nextPseudo)
+            stmt.executeUpdate()
+            while (finDeTour == 1) {
+                wait 3 seconds
+                requete sql
+                        if (response) {
+                            majJoueurs()
+                            finDeTour = 0;
+                        }
+            }
+                //tour du joueur suivant
+            }
+        }
     }
 
     fun jeu(listPseudosTemp : MutableList<String>){
@@ -111,14 +151,20 @@ class Jeu {
         var running = true
         var turn = 0
 
+        //Gestion BDONN
+        compte.connect()
+        var compte = Compte()
+        compte.initProperties()
+
         //Turn 0
-        tourDejeu(listPseudos.get(0), plateauFinTour, plateauDebutTour, true)
+        tourDejeu(compte, listPseudos.get(0), listPseudos.get(1), plateauFinTour, plateauDebutTour, true)
 
         //Main loop
         while (running){
             turn++
-            tourDejeu(listPseudos.get(turn%listPseudos.size), plateauFinTour, plateauDebutTour)
+            tourDejeu(compte, listPseudos.get(turn%listPseudos.size), listPseudos.get(turn%listPseudos.size+1) plateauFinTour, plateauDebutTour) // Attention a size +1
             plateauDebutTour.copier(plateauFinTour)
         }
+        compte.disconnect()
     }
 }
