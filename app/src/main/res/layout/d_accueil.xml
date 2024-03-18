@@ -7,7 +7,6 @@
     tools:context=".MainActivity"
     android:background="@color/white">
 
-
     <TextView
         android:id="@+id/tvWelcome"
         android:layout_width="0dp"

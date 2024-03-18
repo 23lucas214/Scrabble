@@ -10,7 +10,6 @@
 
     <!-- Settings button at the bottom -->
 
-
     <TextView
         android:id="@+id/tvWelcome"
         android:layout_width="0dp"
