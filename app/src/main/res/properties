@@ -1,4 +1,4 @@
 val loginDB = "brichlkc"
-val passwordDB = "mdpsupersolide31@"
+val passwordDB = "mdpsupersecurise"
 val server = "localhost:5324"
 val database = "SCRABBLE"
