@@ -11,11 +11,12 @@ class Compte() {
     var properties = Properties()
 
 
-    val loginDB = ""
-    val passwordDB = ""
-    val server = ""
-    val database = ""
-    val url = ""
+    var loginDB = ""
+    var passwordDB = ""
+    var server = ""
+    var database = ""
+    var pseudo = ""
+    var url = ""
     var driver : DriverManager? = null
     var connection : Connection? = null
 
@@ -49,22 +50,28 @@ class Compte() {
     }
 
 
-
     fun authentification(login : String, mdp : String) : Boolean{
         connect()
+        var retour = false
         val hash1 = (login + mdp).toByteArray(Charsets.UTF_8).toString()
-        val request = "SELECT mdpHash FROM compte WHERE loginHash=?"
+        var request = "SELECT mdpHash FROM compte WHERE loginHash=?"
         var connect = DriverManager.getConnection(url, loginDB, passwordDB)
         var stmt = connect.prepareStatement(request)
         stmt.setString(1,login.toByteArray(Charsets.UTF_8).toString())
-        val rs = stmt.executeQuery()
+        var rs = stmt.executeQuery()
         rs.next()
         val hash2 = rs.getString(1);
         disconnect()
         if(hash1 == hash2){
-            return true
+            retour = true
         }
-        return false;
+        request = "SELECT pseudo FROM compte WHERE loginHash=?"
+        stmt = connect.prepareStatement(request)
+        stmt.setString(1,login.toByteArray(Charsets.UTF_8).toString())
+        rs = stmt.executeQuery()
+        rs.next()
+        pseudo=rs.getString(1)
+        return retour
     }
 
     fun editPassword(login : String, newMdp : String){ //que post authentification
@@ -95,42 +102,37 @@ class Compte() {
 
     // Nouvelle Partie
 
-    fun createNewGame(id : String, nbJoueurs : Int, pioche : MutableList<String>) {
+    fun createNewGame(id : Int, nbJoueurs : Int, pioche : MutableList<String>) {
         var connect = DriverManager.getConnection(url, loginDB, passwordDB)
         connect()
         var request = "INSERT INTO partie(id_partie, nb_joueurs) VALUES(?,?)"
         var stmt = connect.prepareStatement(request)
-        stmt.setString(1, id)
+        stmt.setInt(1, id)
         stmt.setInt(2, nbJoueurs)
         stmt.executeUpdate()
         for (lettre in pioche) {
             request = "INSERT INTO pioche(lettre,nb_lettre,id_partie) VALUES(?,?,?)"
             stmt = connect.prepareStatement(request)
-            stmt.setString(1, id)
+            stmt.setInt(1, id)
             stmt.executeUpdate()
         }
         disconnect()
     }
 
-    fun startGame(id : String, listPseudos : MutableList<String>){
-        connect()
-
-    }
-
 //Rejoindre Partie
 
-    fun joinGame(id : String, pseudo : String) : Int{
+    fun joinGame(id : Int, pseudo : String) : Int{
         connect()
         var connect = DriverManager.getConnection(url, loginDB, passwordDB)
         var request = "SELECT id_partie FROM partie WHERE id_partie=?"
         var stmt = connect.prepareStatement(request)
-        stmt.setString(1, id)
+        stmt.setInt(1, id)
         var rs = stmt.executeQuery()
         rs.next()
         if (rs.getString(1) != null) {
             request = "UPDATE compte SET id_partie=? WHERE pseudo=?"
             stmt = connect.prepareStatement(request)
-            stmt.setString(1, id)
+            stmt.setInt(1, id)
             stmt.setString(2, pseudo)
             stmt.executeUpdate()
             disconnect()
@@ -142,24 +144,24 @@ class Compte() {
 
 //Fin de Partie
 
-    fun endGame(id : String){
+    fun endGame(id : Int){
         connect()
         var connect = DriverManager.getConnection(url, loginDB, passwordDB)
         var request = "DELETE FROM partie WHERE id_partie=?"
         var stmt = connect.prepareStatement(request)
-        stmt.setString(1, id)
+        stmt.setInt(1, id)
         stmt.executeUpdate()
         request = "DELETE FROM pioche WHERE id_partie=?"
         stmt = connect.prepareStatement(request)
-        stmt.setString(1, id)
+        stmt.setInt(1, id)
         stmt.executeUpdate()
         request = "DELETE FROM piece WHERE id_partie=?"
         stmt = connect.prepareStatement(request)
-        stmt.setString(1, id)
+        stmt.setInt(1, id)
         stmt.executeUpdate()
         request = "UPDATE compte SET id_partie=NULL WHERE id_partie=?"
         stmt = connect.prepareStatement(request)
-        stmt.setString(1, id)
+        stmt.setInt(1, id)
         stmt.executeUpdate()
         disconnect()
     }
