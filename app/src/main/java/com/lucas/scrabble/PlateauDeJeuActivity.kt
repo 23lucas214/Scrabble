@@ -33,8 +33,8 @@ class PlateauDeJeuActivity : AppCompatActivity() {
                 params.columnSpec = GridLayout.spec(col)
                 params.setMargins(6, 6, 6, 6)
                 textView.layoutParams = params
-                textView.width = 50 // Taille d'une case en pixels
-                textView.height = 50
+                textView.width = 52 // Taille d'une case en pixels
+                textView.height = 52
                 textView.text = ""
                 textView.textAlignment = TextView.TEXT_ALIGNMENT_CENTER
                 textView.setBackgroundColor(getCellColor(row, col))
@@ -50,13 +50,13 @@ class PlateauDeJeuActivity : AppCompatActivity() {
 
         // Inclut la main du joueur
         val playerHandLayout: LinearLayout = findViewById(R.id.playerHandLayout)
-        val playerHandView = LayoutInflater.from(this).inflate(R.layout.player_hand, null)
-        playerHandLayout.addView(playerHandView)
+        //val playerHandView = LayoutInflater.from(this).inflate(R.layout.player_hand, null)
+        //playerHandLayout.addView(playerHandView)
 
         // Inclut le plateau de jeu
         val plateauDeJeuLayout: RelativeLayout = findViewById(R.id.plateauDeJeuLayout)
-        val plateauDeJeuView = LayoutInflater.from(this).inflate(R.layout.plateau_de_jeu, null)
-        plateauDeJeuLayout.addView(plateauDeJeuView)
+        //val plateauDeJeuView = LayoutInflater.from(this).inflate(R.layout.plateau_de_jeu, null)
+        //plateauDeJeuLayout.addView(plateauDeJeuView)
 
         // Ajout de lettres à la main du joueur
         val playerHand = listOf('A', 'B', 'C', 'D', 'E', 'F', 'G')
