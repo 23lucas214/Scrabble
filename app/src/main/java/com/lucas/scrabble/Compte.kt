@@ -7,7 +7,7 @@ import java.util.Properties
 
 class Compte() {
     // Get Properties file
-    val rootPath = Thread.currentThread().getContextClassLoader().getResource("").path
+    //val rootPath = Thread.currentThread().getContextClassLoader().getResource("").path
     var properties = Properties()
 
 
@@ -17,17 +17,23 @@ class Compte() {
     var database = ""
     var pseudo = ""
     var url = ""
-    var driver : DriverManager? = null
     var connection : Connection? = null
 
     fun initProperties(){
-
+        /*
         properties.load(FileInputStream(rootPath + "properties"))
         val loginDB = properties.getProperty("loginDB")
         val passwordDB = properties.getProperty("passwordDB")
         val server = properties.getProperty("server")
         val database = properties.getProperty("database")
         val url = "jdbc:postgresql://$server/$database"
+        var driver = DriverManager.getDriver(url)
+        */
+        loginDB = "brichlkc"
+        passwordDB = "mdpsupersecurise"
+        server = "localhost:5342"
+        database = "SCRABBLE"
+        url = "jdbc:postgresql://"+server+"/"+database
         var driver = DriverManager.getDriver(url)
     }
 

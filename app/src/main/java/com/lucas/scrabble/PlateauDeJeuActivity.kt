@@ -22,7 +22,7 @@ class PlateauDeJeuActivity : AppCompatActivity() {
     private lateinit var selectedLetter: String
 
     @SuppressLint("WrongViewCast")
-    override fun onCreate(savedInstanceState: Bundle?) {
+    fun onCreate(savedInstanceState: Bundle?, compte : Compte, listJoueurs : MutableList<Inventory>) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_plateau)
 
@@ -63,7 +63,13 @@ class PlateauDeJeuActivity : AppCompatActivity() {
         //plateauDeJeuLayout.addView(plateauDeJeuView)
 
         // Ajout de lettres à la main du joueur
-        val playerHand = listOf('A', 'B', 'C', 'D', 'E', 'F', 'G')
+        var player = Inventory()
+        for(joueur in listJoueurs){
+            if(joueur.getPseudo()==compte.pseudo){
+                player = joueur
+            }
+        }
+        val playerHand = player.getMain()
 
         // Crée une vue pour chaque lettre dans la main du joueur
         playerHand.forEach { letter ->

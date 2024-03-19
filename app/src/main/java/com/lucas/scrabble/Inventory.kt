@@ -20,7 +20,9 @@ class Inventory {
             main.add(tirer(L))
         }
     }
-
+    fun getMain(): MutableList<String>{
+        return main
+    }
     fun getScore(): Int{
         return score
     }
