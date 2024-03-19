@@ -22,15 +22,17 @@ class Jeu {
     /**
      * Map qui donne la valeur de chaque lettre
      */
-    private val pointLettre = hashMapOf<String, Int>("A" to 1, "B" to 3, "C" to 3, "D" to 2,
+    private val pointLettre = hashMapOf<String, Int>(
+        "A" to 1, "B" to 3, "C" to 3, "D" to 2,
         "E" to 1, "F" to 4, "G" to 2, "H" to 4, "I" to 1, "J" to 8, "K" to 10, "L" to 1, "M" to 2,
         "N" to 1, "O" to 1, "P" to 3, "Q" to 8, "R" to 1, "S" to 1, "T" to 1, "U" to 1, "V" to 4,
-        "W" to 10, "X" to 10, "Y" to 10, "Z" to 10, " " to 0)
+        "W" to 10, "X" to 10, "Y" to 10, "Z" to 10, " " to 0
+    )
 
     /**
      * Attribut le nombre de points a une lettre
      */
-    fun lettrePoints(l: String): Int{
+    fun lettrePoints(l: String): Int {
         return pointLettre.getOrDefault(l, 0)
     }
 
@@ -75,23 +77,30 @@ class Jeu {
     /**
      * Initialise le dictionnaire en le remplissant de tous les mots admissibles a partir d'un fichier texte
      */
-    fun initDictionnaire(fichier : String) {
+    fun initDictionnaire(fichier: String) {
         val file = File(fichier)
         try {
             File(fichier).forEachLine { dictionnaire.add(it) }
-        }catch(e: Exception){print(e)}
+        } catch (e: Exception) {
+            print(e)
+        }
     }
 
-    fun majBDON(compte : Compte, joueur : Inventory, id : Int){ // a faire a la fin de chaque tour de chaque joueur
+    fun majBDON(
+        compte: Compte,
+        joueur: Inventory,
+        id: Int
+    ) { // a faire a la fin de chaque tour de chaque joueur
         compte.connect()
         compte.initProperties()
         var connect = DriverManager.getConnection(compte.url, compte.loginDB, compte.passwordDB)
-        var request = "UPDATE compte SET points=?,scorePartie=?  WHERE pseudo=? AND id_partie=?" //compte
+        var request =
+            "UPDATE compte SET points=?,scorePartie=?  WHERE pseudo=? AND id_partie=?" //compte
         var stmt = connect.prepareStatement(request)
         stmt.setInt(1, joueur.getPoints())
-        stmt.setInt(2,joueur.getScore())
+        stmt.setInt(2, joueur.getScore())
         stmt.setString(3, joueur.getPseudo())
-        stmt.setInt(4,id)
+        stmt.setInt(4, id)
         stmt.executeUpdate()
 
         /*
@@ -105,10 +114,10 @@ class Jeu {
          */
 
         request = "UPDATE pioche SET lettre=?,nbLettre=? WHERE id_partie=?" //pioche
-        for(i in 1..pioche.size) {
+        for (i in 1..pioche.size) {
             stmt = connect.prepareStatement(request)
             stmt.setString(1, pioche.get(i))
-            stmt.setInt(2, compte(pioche.get(i),pioche))
+            stmt.setInt(2, compte(pioche.get(i), pioche))
             stmt.setInt(3, id)
             stmt.executeUpdate()
         }
@@ -116,62 +125,81 @@ class Jeu {
         compte.disconnect()
     }
 
-    fun compte(lettre : String, list : MutableList<String>): Int{
+    fun compte(lettre: String, list: MutableList<String>): Int {
         var s = 0
-        for(i in 1..list.size){
-            if(list.get(i)==lettre){
+        for (i in 1..list.size) {
+            if (list.get(i) == lettre) {
                 s++
             }
         }
         return s
     }
 
-    fun majJoueurs(compte : Compte){ // a faire dès qu'on trouve une modif dans la base de données
+    fun majJoueurs(compte: Compte) { // a faire dès qu'on trouve une modif dans la base de données
 
     }
-    fun tourDejeu(id : Int, compte : Compte, joueur : Inventory, pseudo: String, nextPseudo: String, plateauDebutTour: Plateau, plateauFinTour: Plateau, firstTurn: Boolean = false){
+
+    fun verifTour(compte : Compte): String{
         var request = ""
         var resultat = ""
-        var res1 = ""
-        var finDeTour = 0
-        var rs : ResultSet
-        var stmt : PreparedStatement
+        var pseudo = compte.pseudo
+        var rs: ResultSet
+        var stmt: PreparedStatement
         var connect = DriverManager.getConnection(compte.url, compte.loginDB, compte.passwordDB)
         request = "SELECT tour FROM partie" //vérifie à qui c'est le tour
         stmt = connect.prepareStatement(request)
         rs = stmt.executeQuery()
         rs.next()
         resultat = rs.getString(1)
-        res1 = resultat
-        if(pseudo==resultat) {
+        return resultat
+    }
+
+    fun tourDejeu(
+        id: Int,
+        compte: Compte,
+        joueur: Inventory,
+        nextPseudo: String,
+        plateauDebutTour: Plateau,
+        plateauFinTour: Plateau,
+        firstTurn: Boolean = false
+    ) {
+        var request = ""
+        var resultat = ""
+        var res1 = ""
+        var pseudo = compte.pseudo
+        var finDeTour = 0
+        var rs: ResultSet
+        var stmt: PreparedStatement
+        var connect = DriverManager.getConnection(compte.url, compte.loginDB, compte.passwordDB)
+        res1 = verifTour(compte)
+        resultat = res1
+        if (pseudo == resultat) {
             //TOUR DE PSEUDO
-            while(!plateauFinTour.verifierAjoutPlateau(plateauDebutTour, this, firstTurn)){
+            while (!plateauFinTour.verifierAjoutPlateau(plateauDebutTour, this, firstTurn)) {
+                if(firstTurn) {
+                    //TOUR 0
+                }
                 // REMPLIR ICI
             }
             // fin du tour :
-            joueur.setPoints(joueur.calculPointsMot(plateauDebutTour,plateauFinTour, this))
-            joueur.setScore(joueur.getScore()+joueur.getPoints())
+            joueur.setPoints(joueur.calculPointsMot(plateauDebutTour, plateauFinTour, this))
+            joueur.setScore(joueur.getScore() + joueur.getPoints())
             majBDON(compte, joueur, id) //maj des données
             request = "UPDATE partie SET tour=?" //maj du pseudo pour qui c'est le tour
             stmt = connect.prepareStatement(request)
             stmt.setString(1, nextPseudo)
             stmt.executeUpdate()
-        }
-        else {
+        } else {
             do {
                 Thread.sleep(3000) // on attend 3 secondes
-                request = "SELECT tour FROM partie" //vérifie à qui c'est le tour
-                stmt = connect.prepareStatement(request)
-                rs = stmt.executeQuery()
-                rs.next()
-                resultat = rs.getString(1)
-            }while(resultat!=res1) // si on a trouvé un changement, on a fini le tour
+                resultat = verifTour(compte)
+            } while (resultat != res1) // si on a trouvé un changement, on a fini le tour
             majJoueurs(compte) //on met a jour ses données
         }
 
     }
 
-    fun rejoindre(pseudo: String, id : Int){
+    fun rejoindre(pseudo: String, id: Int) {
         //Gestion BDONN
         var compte = Compte()
         compte.initProperties()
@@ -181,15 +209,7 @@ class Jeu {
         compte.disconnect()
     }
 
-    fun getRowCount(resultSet: ResultSet): Int {
-        var rowCount = 0
-        while (resultSet.next()) {
-            rowCount++
-        }
-        return rowCount
-    }
-
-    fun jeu(nbjoueurs : Int, id : Int){
+    fun jeu(nbjoueurs: Int, id: Int) {
 
         //Gestion BDONN
         var compte = Compte()
@@ -197,10 +217,10 @@ class Jeu {
         compte.connect()
 
         //Création de la partie
-        compte.createNewGame(id,nbjoueurs,pioche)
+        compte.createNewGame(id, nbjoueurs, pioche)
 
         //Createur rejoint la partie
-        rejoindre(compte.pseudo,id)
+        rejoindre(compte.pseudo, id)
 
         //Créer la liste des joueurs:
         var listInventories = mutableListOf<Inventory>()
@@ -208,8 +228,8 @@ class Jeu {
 
         //Attente de la connexion des joueurs : ECRAN ATTENTE
         var request = ""
-        var stmt : PreparedStatement
-        var rs : ResultSet
+        var stmt: PreparedStatement
+        var rs: ResultSet
         var connect = DriverManager.getConnection(compte.url, compte.loginDB, compte.passwordDB)
 
         do {
@@ -217,68 +237,91 @@ class Jeu {
             Thread.sleep(3000) // on attend 3 secondes
             request = "SELECT pseudo FROM compte WHERE id_partie=?"
             stmt = connect.prepareStatement(request)
-            stmt.setInt(1,id)
+            stmt.setInt(1, id)
             rs = stmt.executeQuery()
             rs.next()
-            for(i in 1..getRowCount(rs)) {
-                nbJoueurs ++
+            while (rs.next()) {
+                nbJoueurs++
             }
-        }while(nbjoueurs==nbJoueurs)
+        } while (nbjoueurs == nbJoueurs)
 
         //Remplit la liste
         request = "SELECT pseudo FROM compte WHERE id_partie=?"
         stmt = connect.prepareStatement(request)
-        stmt.setInt(1,id)
+        stmt.setInt(1, id)
         rs = stmt.executeQuery()
         rs.next()
-        for(i in 1..nbjoueurs) {
+        for (i in 1..nbjoueurs) {
             listInventories.get(i).setPseudo(rs.getString(i))
         }
 
         //Tirer au sort l'ordre de jeu
-        var alea : Int
+        var alea: Int
         var listJoueurs = mutableListOf<Inventory>()
-        while (listInventories.isNotEmpty()){
+        while (listInventories.isNotEmpty()) {
             alea = Random.nextInt(listInventories.size)
             listJoueurs.add(listInventories.get(alea))
             listInventories.removeAt(alea)
         }
+
+        //Remplir la variable tour dans la BDD avec le premier joueur
 
         //Initialisation du jeu
         initPioche()
         initDictionnaire("") //lien fichier text
 
         //Remplissage des inventaires
-        for (x in listInventories){
+        for (x in listJoueurs) {
             x.tirerNLettres(7, pioche)
+
+            //Creation des plateaux
+            var plateauDebutTour = Plateau()
+            var plateauFinTour = Plateau()
+            var running = true
+            var turn = 0
+
+            //Initialisation de la pioche
+            initPioche()
+
+            //Turn 0
+            tourDejeu(
+                id,
+                compte,
+                listInventories.get(0),
+                listJoueurs.get(1).getPseudo(),
+                plateauFinTour,
+                plateauDebutTour,
+                true,
+            )
+
+            //Main loop
+            while (running) {
+                turn++
+                tourDejeu(
+                    id,
+                    compte,
+                    listJoueurs.get(turn % listInventories.size),
+                    nextInList(listJoueurs, turn % listJoueurs.size),
+                    plateauFinTour,
+                    plateauDebutTour,
+                    false
+                )
+                plateauDebutTour.copier(plateauFinTour)
+            }
+            compte.endGame(id)
+            compte.disconnect()
         }
-
-        //Creation des plateaux
-        var plateauDebutTour = Plateau()
-        var plateauFinTour = Plateau()
-        var running = true
-        var turn = 0
-
-        //Initialisation de la pioche
-        initPioche()
-
-        //Turn 0
-        tourDejeu(id, compte, listInventories.get(0), listJoueurs.get(0).getPseudo(), listJoueurs.get(1).getPseudo(), plateauFinTour, plateauDebutTour, true)
-
-        //Main loop
-        while (running){
-            turn++
-            tourDejeu(id, compte, listInventories.get(turn%listInventories.size), listInventories.get(turn%listInventories.size).getPseudo(), nextInList(listInventories, turn%listInventories.size), plateauFinTour, plateauDebutTour)
-            plateauDebutTour.copier(plateauFinTour)
-        }
-        compte.disconnect()
     }
 
-    fun nextInList(list : MutableList<Inventory>, indice : Int): String{ // renvoie l'indice du prochain joueur à jouer
-        var taille = list.size
-        if(indice==taille){
-            return list.get(0).getPseudo()
+        fun nextInList(
+            list: MutableList<Inventory>,
+            indice: Int
+        ): String { // renvoie l'indice du prochain joueur à jouer
+            var taille = list.size
+            if (indice == taille) {
+                return list.get(0).getPseudo()
+            } else {
+                return list.get(indice + 1).getPseudo()
+            }
         }
-        else { return list.get(indice+1).getPseudo() }
     }
-}

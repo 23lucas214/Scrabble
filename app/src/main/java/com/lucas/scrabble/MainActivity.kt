@@ -51,9 +51,9 @@ class MainActivity : AppCompatActivity() {
                                 stmt.setInt(1,idpartie)
                                 rs = stmt.executeQuery()
                                 rs.next()
-                                for(i in 1..jeu.getRowCount(rs)) { //pas connu, clément cherche
+                                while(rs.next()) {
                                     nbJoueurs ++
-                                    rs.getString(i) //à mettre dans le textView
+                                    rs.getString(1) //à mettre dans le textView
                                 }
                             }while(nbjoueurs==nbJoueurs)
                             var jeu=Jeu()
@@ -110,9 +110,9 @@ class MainActivity : AppCompatActivity() {
                             stmt.setInt(1,idpartie)
                             rs = stmt.executeQuery()
                             rs.next()
-                            for(i in 1..jeu.getRowCount(rs)) { //pas connu, clément cherche
+                            while(rs.next()){
                                 nbJoueurs ++
-                                rs.getString(i) //à mettre dans le textView
+                                rs.getString(1) //à mettre dans le textView
                             }
                         }while(nbjoueurs==nbJoueurs)
                         jeu.jeu(nbjoueurs,idpartie)//nombre de joueurs, et identifiant de la partie
