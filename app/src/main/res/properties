@@ -1,4 +1,4 @@
 val loginDB = "brichlkc"
 val passwordDB = "mdpsupersecurise"
-val server = "scrabble.c5y8mukeg4jh.eu-central-1.rds.amazonaws.com:5432"
+val server = "localhost:5342"
 val database = "SCRABBLE"
