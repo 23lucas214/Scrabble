@@ -2,6 +2,7 @@ package com.lucas.scrabble
 
 import android.annotation.SuppressLint
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.graphics.drawable.GradientDrawable
 import android.widget.LinearLayout
@@ -11,6 +12,7 @@ import android.view.Gravity
 import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.Button
 import android.widget.GridLayout
 
@@ -19,7 +21,7 @@ import android.widget.GridLayout
 
 class PlateauDeJeuActivity : AppCompatActivity() {
 
-    private lateinit var selectedLetter: String
+    private lateinit var selectedLetter: View
 
     @SuppressLint("WrongViewCast")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -87,21 +89,23 @@ class PlateauDeJeuActivity : AppCompatActivity() {
                 // Code pour gérer le clic sur une lettre de la main du joueur
 
                 // Récupère la lettre du TextView cliqué
-                selectedLetter = (it as TextView).text.toString()
-
-                // Change la couleur de fond pour indiquer que la lettre a été sélectionnée
+                selectedLetter = it
                 it.setBackgroundColor(ContextCompat.getColor(this, R.color.lightbrown))
+
+
 
                 // Ajoute un écouteur de clic à chaque case du plateau
                 val plateauDeJeu = findViewById<GridLayout>(R.id.boardGridLayout)
                 for (i in 0 until plateauDeJeu.childCount) {
                     val case = plateauDeJeu.getChildAt(i)
                     case.setOnClickListener {
-                        // Placer la lettre sélectionnée dans la case du plateau
-                        (it as TextView).text = selectedLetter
+                        if ((selectedLetter.background as ColorDrawable).color == -1323865 ){
+                            // Placer la lettre sélectionnée dans la case du plateau
+                            selectedLetter.setBackgroundColor(ContextCompat.getColor(this, R.color.white))
+                            (it as TextView).text = (selectedLetter as TextView).text
+                        }
                     }
                 }
-                it.setBackgroundColor(ContextCompat.getColor(this, R.color.white))
             }
             playerHandLayout.addView(textView)
         }
