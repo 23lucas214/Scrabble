@@ -64,13 +64,14 @@ class PlateauDeJeuActivity : AppCompatActivity() {
         //plateauDeJeuLayout.addView(plateauDeJeuView)
 
         // Ajout de lettres à la main du joueur
-        var player = Inventory()
+        /*var player = Inventory()
         for(joueur in listJoueurs){
             if(joueur.getPseudo()==compte.pseudo){
                 player = joueur
             }
         }
-        val playerHand = player.getMain()
+        val playerHand = player.getMain()*/
+        val playerHand = listOf('A', 'B', 'C', 'D', 'E', 'F', 'G')
 
         // Crée une vue pour chaque lettre dans la main du joueur
         playerHand.forEach { letter ->
