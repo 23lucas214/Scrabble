@@ -17,7 +17,7 @@ class MainActivity : AppCompatActivity() {
         val compte = Compte()
         compte.initProperties()
         compte.connect()
-
+        var jeu=Jeu()
         btnLogin.setOnClickListener{
             setContentView(R.layout.c_connexion)
             val btnOk = findViewById<Button>(R.id.btnOk)
@@ -115,7 +115,6 @@ class MainActivity : AppCompatActivity() {
                                 rs.getString(i) //à mettre dans le textView
                             }
                         }while(nbjoueurs==nbJoueurs)
-                        var jeu=Jeu()
                         jeu.jeu(nbjoueurs,idpartie)//nombre de joueurs, et identifiant de la partie
                         //Appel à plateauDeJeuActivité, et déroulement d'une partie
                     }
