@@ -23,7 +23,7 @@ class PlateauDeJeuActivity : AppCompatActivity() {
     private var selectedLetter: View? = null
 
     @SuppressLint("WrongViewCast")
-    fun onCreate(savedInstanceState: Bundle?, compte : Compte, listJoueurs : MutableList<Inventory>) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_plateau)
 
@@ -130,6 +130,7 @@ class PlateauDeJeuActivity : AppCompatActivity() {
         var poubelle = findViewById<ImageView>(R.id.btn_poubelle)
         poubelle.setOnClickListener{
             selectedLetter?.setBackgroundColor(ContextCompat.getColor(this, R.color.white))
+            selectedLetter = null
         }
     }
 
