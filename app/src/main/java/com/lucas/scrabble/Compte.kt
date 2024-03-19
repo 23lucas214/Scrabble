@@ -21,6 +21,7 @@ class Compte() {
     var connection : Connection? = null
 
     fun initProperties(){
+
         properties.load(FileInputStream(rootPath + "properties"))
         val loginDB = properties.getProperty("loginDB")
         val passwordDB = properties.getProperty("passwordDB")
@@ -102,13 +103,13 @@ class Compte() {
 
     // Nouvelle Partie
 
-    fun createNewGame(id : Int, nbJoueurs : Int, pioche : MutableList<String>) {
+    fun createNewGame(id : Int, pioche : MutableList<String>, compte: Compte) {
         var connect = DriverManager.getConnection(url, loginDB, passwordDB)
         connect()
-        var request = "INSERT INTO partie(id_partie, nb_joueurs) VALUES(?,?)"
+        var request = "INSERT INTO partie(id_partie, tour) VALUES(?,?)"
         var stmt = connect.prepareStatement(request)
         stmt.setInt(1, id)
-        stmt.setInt(2, nbJoueurs)
+        stmt.setString(2, compte.pseudo) //par défaut créateur joue en premier, mais modifié après
         stmt.executeUpdate()
         for (lettre in pioche) {
             request = "INSERT INTO pioche(lettre,nb_lettre,id_partie) VALUES(?,?,?)"

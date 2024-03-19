@@ -185,9 +185,10 @@ class Jeu {
             joueur.setPoints(joueur.calculPointsMot(plateauDebutTour, plateauFinTour, this))
             joueur.setScore(joueur.getScore() + joueur.getPoints())
             majBDON(compte, joueur, id) //maj des données
-            request = "UPDATE partie SET tour=?" //maj du pseudo pour qui c'est le tour
+            request = "UPDATE partie SET tour=? WHERE id=?" //maj du pseudo pour qui c'est le tour
             stmt = connect.prepareStatement(request)
             stmt.setString(1, nextPseudo)
+            stmt.setInt(2, id)
             stmt.executeUpdate()
         } else {
             do {
@@ -217,7 +218,7 @@ class Jeu {
         compte.connect()
 
         //Création de la partie
-        compte.createNewGame(id, nbjoueurs, pioche)
+        compte.createNewGame(id, pioche, compte)
 
         //Createur rejoint la partie
         rejoindre(compte.pseudo, id)
@@ -264,7 +265,12 @@ class Jeu {
             listInventories.removeAt(alea)
         }
 
-        //Remplir la variable tour dans la BDD avec le premier joueur
+        //Changer la variable tour dans la BDD par le premier joueur
+        request = "UPDATE partie SET tour=? WHERE id=?"
+        stmt = connect.prepareStatement(request)
+        stmt.setString(1, listJoueurs.get(0).getPseudo())
+        stmt.setInt(2, id)
+        stmt.executeUpdate()
 
         //Initialisation du jeu
         initPioche()
