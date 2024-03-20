@@ -2,6 +2,7 @@ package com.lucas.scrabble
 
 import android.annotation.SuppressLint
 import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.graphics.drawable.GradientDrawable
 import android.widget.LinearLayout
@@ -11,15 +12,15 @@ import android.view.Gravity
 import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.Button
 import android.widget.GridLayout
-
-
+import android.widget.ImageView
 
 
 class PlateauDeJeuActivity : AppCompatActivity() {
 
-    private lateinit var selectedLetter: String
+    private var selectedLetter: View? = null
 
     @SuppressLint("WrongViewCast")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,6 +64,13 @@ class PlateauDeJeuActivity : AppCompatActivity() {
         //plateauDeJeuLayout.addView(plateauDeJeuView)
 
         // Ajout de lettres à la main du joueur
+        /*var player = Inventory()
+        for(joueur in listJoueurs){
+            if(joueur.getPseudo()==compte.pseudo){
+                player = joueur
+            }
+        }
+        val playerHand = player.getMain()*/
         val playerHand = listOf('A', 'B', 'C', 'D', 'E', 'F', 'G')
 
         // Crée une vue pour chaque lettre dans la main du joueur
@@ -85,29 +93,47 @@ class PlateauDeJeuActivity : AppCompatActivity() {
             // Ajoute un listener pour détecter les clics sur les lettres
             textView.setOnClickListener {
                 // Code pour gérer le clic sur une lettre de la main du joueur
+                if (selectedLetter == null&&(it.background as ColorDrawable).color != -1 ){
+                    // Récupère la lettre du TextView cliqué
+                    selectedLetter = it
+                    it.setBackgroundColor(ContextCompat.getColor(this, R.color.lightbrown))
+                }else if (selectedLetter == null){
+                    selectedLetter =it
+                }
 
-                // Récupère la lettre du TextView cliqué
-                selectedLetter = (it as TextView).text.toString()
-
-                // Change la couleur de fond pour indiquer que la lettre a été sélectionnée
-                it.setBackgroundColor(ContextCompat.getColor(this, R.color.lightbrown))
 
                 // Ajoute un écouteur de clic à chaque case du plateau
                 val plateauDeJeu = findViewById<GridLayout>(R.id.boardGridLayout)
                 for (i in 0 until plateauDeJeu.childCount) {
                     val case = plateauDeJeu.getChildAt(i)
                     case.setOnClickListener {
-                        // Placer la lettre sélectionnée dans la case du plateau
-                        (it as TextView).text = selectedLetter
+                        if (selectedLetter != null){
+                            if ((selectedLetter!!.background as ColorDrawable).color == -1323865 ){
+                                // Placer la lettre sélectionnée dans la case du plateau
+                                selectedLetter!!.setBackgroundColor(ContextCompat.getColor(this, R.color.white))
+                                (it as TextView).text = (selectedLetter as TextView).text
+                                selectedLetter = null
+                            }
+                            else if((selectedLetter!!.background as ColorDrawable).color == -1 ){
+                                if ((selectedLetter!! as TextView).text == (it as TextView).text ){
+                                    selectedLetter!!.setBackgroundColor(ContextCompat.getColor(this, R.color.brown))
+                                    (it as TextView).text = ""
+                                    selectedLetter = null
+                                }
+                            }
+
+                        }
                     }
                 }
-                it.setBackgroundColor(ContextCompat.getColor(this, R.color.white))
             }
             playerHandLayout.addView(textView)
         }
+        var poubelle = findViewById<ImageView>(R.id.btn_poubelle)
+        poubelle.setOnClickListener{
+            selectedLetter?.setBackgroundColor(ContextCompat.getColor(this, R.color.white))
+            selectedLetter = null
+        }
     }
-
-    //////////jeterLettres//////////
 
 
     //////////Coloration//////////

@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Button
 import android.widget.EditText
+import android.widget.TextView
 import java.sql.DriverManager
 import java.sql.PreparedStatement
 import java.sql.ResultSet
@@ -15,6 +16,7 @@ class MainActivity : AppCompatActivity() {
         val btnLogin = findViewById<Button>(R.id.btnLogin);
         val btnRegister = findViewById<Button>(R.id.btnRegister)
         val compte = Compte()
+        var textView : TextView
         compte.initProperties()
         compte.connect()
         var jeu=Jeu()
@@ -51,9 +53,10 @@ class MainActivity : AppCompatActivity() {
                                 stmt.setInt(1,idpartie)
                                 rs = stmt.executeQuery()
                                 rs.next()
-                                for(i in 1..jeu.getRowCount(rs)) { //pas connu, clément cherche
+                                while(rs.next()) {
                                     nbJoueurs ++
-                                    rs.getString(i) //à mettre dans le textView
+                                    textView = findViewById<TextView>(R.id.tvPlayerList)
+                                    textView.setText(rs.getString(1)) //à mettre dans le textView
                                 }
                             }while(nbjoueurs==nbJoueurs)
                             var jeu=Jeu()
@@ -110,9 +113,10 @@ class MainActivity : AppCompatActivity() {
                             stmt.setInt(1,idpartie)
                             rs = stmt.executeQuery()
                             rs.next()
-                            for(i in 1..jeu.getRowCount(rs)) { //pas connu, clément cherche
+                            while(rs.next()){
                                 nbJoueurs ++
-                                rs.getString(i) //à mettre dans le textView
+                                textView = findViewById<TextView>(R.id.tvPlayerList)
+                                textView.setText(rs.getString(1)) //à mettre dans le textView
                             }
                         }while(nbjoueurs==nbJoueurs)
                         jeu.jeu(nbjoueurs,idpartie)//nombre de joueurs, et identifiant de la partie

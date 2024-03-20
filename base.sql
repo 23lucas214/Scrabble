@@ -2,6 +2,7 @@ CREATE SEQUENCE partie_id_partie_seq;
 
 CREATE TABLE partie (
                 id_partie INTEGER NOT NULL DEFAULT nextval('partie_id_partie_seq'),
+                tour_partie STRING NOT NULL,
                 CONSTRAINT partie_pk PRIMARY KEY (id_partie)
 );
 
