@@ -116,8 +116,8 @@ class PlateauDeJeuActivity : AppCompatActivity() {
     private fun getCellColor(row: Int, col: Int): Int {
         // Logique pour déterminer la couleur de chaque case du plateau (par exemple, cases spéciales)
         return when {
-            isSpecialCase(row, col) -> ContextCompat.getColor(this, R.color.yellow)
-            isSpecialCase1(row, col) -> ContextCompat.getColor(this, R.color.red)
+            isSpecialCase(row, col) -> ContextCompat.getColor(this, R.color.red)
+            isSpecialCase1(row, col) -> ContextCompat.getColor(this, R.color.yellow)
             isSpecialCase2(row, col) -> ContextCompat.getColor(this, R.color.blue)
             isSpecialCase3(row, col) -> ContextCompat.getColor(this, R.color.green)
             else -> ContextCompat.getColor(this,R.color.grey)
