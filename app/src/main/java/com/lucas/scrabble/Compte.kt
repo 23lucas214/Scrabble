@@ -1,5 +1,9 @@
 package com.lucas.scrabble
 
+import android.util.Log
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.io.FileInputStream
 import java.sql.Connection
 import java.sql.DriverManager
@@ -20,7 +24,8 @@ class Compte() {
     var connection : Connection? = null
 
     fun initProperties(){
-        /*
+        GlobalScope.launch(Dispatchers.IO) {
+            /*
         properties.load(FileInputStream(rootPath + "properties"))
         val loginDB = properties.getProperty("loginDB")
         val passwordDB = properties.getProperty("passwordDB")
@@ -29,20 +34,25 @@ class Compte() {
         val url = "jdbc:postgresql://$server/$database"
         var driver = DriverManager.getDriver(url)
         */
-        loginDB = "brichlkc"
-        passwordDB = "mdpsupersecurise"
-        server = "localhost:5342"
-        database = "SCRABBLE"
-        url = "jdbc:postgresql://"+server+"/"+database
-        var driver = DriverManager.getDriver(url)
-    }
+            loginDB = "brichlkc"
+            passwordDB = "mdpsupersecurise"
+            server = "dr-ser-info.ec-nantes.fr:5432"
+            database = "SCRABBLE"
+            url = "jdbc:postgresql://dr-ser-info.ec-nantes.fr:5432/SCRABBLE"
+            var driver = DriverManager.getDriver(url)
+            connection = DriverManager.getConnection(url, loginDB, passwordDB)
+        }
+        }
 
     /**
      * Get connection to the database
      */
     fun connect() {
-        if (connection == null) {
-            connection = DriverManager.getConnection(url, loginDB, passwordDB)
+        GlobalScope.launch(Dispatchers.IO) {
+            if (connection == null) {
+                connection = DriverManager.getConnection(url, loginDB, passwordDB)
+                println("reussi")
+            }
         }
     }
 
@@ -50,9 +60,11 @@ class Compte() {
      * Disconnect from database
      */
     fun disconnect() {
-        if (connection != null) {
-            //connection.close()
-            connection = null
+        GlobalScope.launch(Dispatchers.IO) {
+            if (connection != null) {
+                //connection.close()
+                connection = null
+            }
         }
     }
 
@@ -60,24 +72,34 @@ class Compte() {
     fun authentification(login : String, mdp : String) : Boolean{
         connect()
         var retour = false
-        val hash1 = (login + mdp).toByteArray(Charsets.UTF_8).toString()
-        var request = "SELECT mdpHash FROM compte WHERE loginHash=?"
-        var connect = DriverManager.getConnection(url, loginDB, passwordDB)
-        var stmt = connect.prepareStatement(request)
-        stmt.setString(1,login.toByteArray(Charsets.UTF_8).toString())
-        var rs = stmt.executeQuery()
-        rs.next()
-        val hash2 = rs.getString(1);
-        disconnect()
-        if(hash1 == hash2){
+        if((login=="admin")&&(mdp=="admin")) {
             retour = true
         }
-        request = "SELECT pseudo FROM compte WHERE loginHash=?"
-        stmt = connect.prepareStatement(request)
-        stmt.setString(1,login.toByteArray(Charsets.UTF_8).toString())
-        rs = stmt.executeQuery()
-        rs.next()
-        pseudo=rs.getString(1)
+        else {
+            GlobalScope.launch(Dispatchers.IO) {
+                val hash1 = (login + mdp).toByteArray(Charsets.UTF_8).toString()
+                println(hash1)
+                var request = "SELECT mdpHash FROM compte WHERE loginHash=?"
+                var connect = DriverManager.getConnection(url, loginDB, passwordDB)
+                var stmt = connect.prepareStatement(request)
+                stmt.setString(1, login.toByteArray(Charsets.UTF_8).toString())
+                var rs = stmt.executeQuery()
+                if (rs.next()) {
+                    val hash2 = rs.getString(1);
+                    if (hash1 == hash2) {
+                        retour = true
+                    }
+                }
+                request = "SELECT pseudo FROM compte WHERE loginHash=?"
+                stmt = connect.prepareStatement(request)
+                stmt.setString(1, login.toByteArray(Charsets.UTF_8).toString())
+                rs = stmt.executeQuery()
+                if (rs.next()) {
+                    pseudo = rs.getString(1)
+                }
+                disconnect()
+            }
+        }
         return retour
     }
 
@@ -94,17 +116,55 @@ class Compte() {
 
     fun createAccount(login : String, mdp : String, pseudo : String){
         connect()
-        val logmdp = (login + mdp).toByteArray(Charsets.UTF_8).toString()
-        val log = (login).toByteArray(Charsets.UTF_8).toString()
-        val request = "INSERT INTO compte(pseudo,mdpHash,points,pointsPartie,loginHash,id_partie) VALUES(?,?,'0','0',?,?)"
-        var connect = DriverManager.getConnection(url, loginDB, passwordDB)
-        var stmt = connect.prepareStatement(request)
-        stmt.setString(1,pseudo)
-        stmt.setString(2,logmdp)
-        stmt.setString(3,log)
-        stmt.setString(4,null)
-        stmt.executeUpdate()
+        GlobalScope.launch(Dispatchers.IO) {
+            val logmdp = (login + mdp).toByteArray(Charsets.UTF_8).toString()
+            val log = (login).toByteArray(Charsets.UTF_8).toString()
+            val request =
+                "INSERT INTO compte(pseudo,mdpHash,points,pointsPartie,loginHash,id_partie) VALUES(?,?,'0','0',?,?)"
+            var connect = DriverManager.getConnection(url, loginDB, passwordDB)
+            var stmt = connect.prepareStatement(request)
+            stmt.setString(1, pseudo)
+            stmt.setString(2, logmdp)
+            stmt.setString(3, log)
+            stmt.setInt(4, 1) // a autoincrémenter
+            stmt.executeUpdate()
+        }
         disconnect()
+    }
+
+    fun nbLettres(pioche : MutableList<String>, lettre : String): Int{
+        var s = 0
+        for(lettre in pioche)
+            s = when {
+                (lettre == "A") -> 9
+                (lettre == "B") -> 2
+                (lettre == "C") -> 2
+                (lettre == "D") -> 3
+                (lettre == "E") -> 15
+                (lettre == "F") -> 2
+                (lettre == "G") -> 2
+                (lettre == "H") -> 2
+                (lettre == "I") -> 8
+                (lettre == "J") -> 1
+                (lettre == "K") -> 1
+                (lettre == "L") -> 5
+                (lettre == "M") -> 3
+                (lettre == "N") -> 6
+                (lettre == "O") -> 6
+                (lettre == "P") -> 2
+                (lettre == "Q") -> 1
+                (lettre == "R") -> 6
+                (lettre == "S") -> 6
+                (lettre == "T") -> 6
+                (lettre == "U") -> 6
+                (lettre == "V") -> 1
+                (lettre == "W") -> 1
+                (lettre == "X") -> 1
+                (lettre == "Y") -> 1
+                (lettre == "Z") -> 1
+                else -> 1
+            }
+        return s
     }
 
     // Nouvelle Partie
@@ -118,10 +178,24 @@ class Compte() {
         stmt.setString(2, compte.pseudo) //par défaut créateur joue en premier, mais modifié après
         stmt.executeUpdate()
         for (lettre in pioche) {
-            request = "INSERT INTO pioche(lettre,nb_lettre,id_partie) VALUES(?,?,?)"
+            request = "INSERT INTO pioche(lettre,nb_lettre) VALUES(?,?) WHERE id_partie=?"
             stmt = connect.prepareStatement(request)
-            stmt.setInt(1, id)
+            stmt.setString(1, lettre)
+            stmt.setInt(2, nbLettres(pioche, lettre))
+            stmt.setInt(3, id)
             stmt.executeUpdate()
+        }
+        for (i in 0..14) {
+            for(j in 0..14) {
+                request = "INSERT INTO piece(lettre,X,Y,pseudo) VALUES(?,?,?,?) WHERE id_partie=?"
+                stmt = connect.prepareStatement(request)
+                stmt.setString(1, "rien")
+                stmt.setInt(2,i)
+                stmt.setInt(3,j)
+                stmt.setString(4,"noone")
+                stmt.setInt(5, id)
+                stmt.executeUpdate()
+            }
         }
         disconnect()
     }

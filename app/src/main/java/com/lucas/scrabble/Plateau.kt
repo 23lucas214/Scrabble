@@ -44,6 +44,10 @@ class Plateau {
         return plateau[i][j] in collisionOk
     }
 
+    fun get(x:Int,y:Int):String{
+        return plateau[x][y]
+    }
+
     /**
      * Renvoie une liste contenant les mots ecris sur le plateau
      */

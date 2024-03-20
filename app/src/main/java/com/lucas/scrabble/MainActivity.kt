@@ -60,7 +60,7 @@ class MainActivity : AppCompatActivity() {
                                 }
                             }while(nbjoueurs==nbJoueurs)
                             var jeu=Jeu()
-                            jeu.jeu(nbjoueurs,idpartie)//nombre de joueurs, et identifiant de la partie
+                            jeu.jeu(nbjoueurs,idpartie, compte)//nombre de joueurs, et identifiant de la partie
                             //Appel à plateauDeJeuActivité, et déroulement d'une partie
                         }
                     }
@@ -119,15 +119,20 @@ class MainActivity : AppCompatActivity() {
                                 textView.setText(rs.getString(1)) //à mettre dans le textView
                             }
                         }while(nbjoueurs==nbJoueurs)
-                        jeu.jeu(nbjoueurs,idpartie)//nombre de joueurs, et identifiant de la partie
-                        //Appel à plateauDeJeuActivité, et déroulement d'une partie
+                        jeu.jeu(nbjoueurs,idpartie, compte)//nombre de joueurs, et identifiant de la partie
+                        PlateauDeJeuActivity()//Appel à plateauDeJeuActivité à chaque tour
                     }
                 }
                 btnJoinGame.setOnClickListener {
                     setContentView(R.layout.f_rejoindre)
                     val btnJoinPublicGame = findViewById<Button>(R.id.btnJoinPublicGame)
                     val etGameId = findViewById<EditText>(R.id.etGameId)
-                    val idpartie = etGameId.text.toString().toInt()
+                    var idp = etGameId.text.toString()
+                    while(idp=="") {
+                        idp = etGameId.text.toString()
+                        Thread.sleep(500) // on attend 0.5 secondes puis on recheck si le champ a été rempli
+                    }
+                    val idpartie = idp.toInt()
                     btnJoinPublicGame.setOnClickListener {
                         setContentView(R.layout.i_chargement)
                         jeu.rejoindre(compte.pseudo, idpartie)
