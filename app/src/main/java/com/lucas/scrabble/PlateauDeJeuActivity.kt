@@ -16,6 +16,10 @@ import android.view.View
 import android.widget.Button
 import android.widget.GridLayout
 import android.widget.ImageView
+import org.w3c.dom.Text
+import java.sql.DriverManager
+import java.sql.PreparedStatement
+import java.sql.ResultSet
 
 
 class PlateauDeJeuActivity : AppCompatActivity() {
@@ -70,8 +74,28 @@ class PlateauDeJeuActivity : AppCompatActivity() {
                 player = joueur
             }
         }
+
         val playerHand = player.getMain()*/
         val playerHand = listOf('A', 'B', 'C', 'D', 'E', 'F', 'G')
+
+        /*
+        var textView1 = findViewById<TextView>(R.id.scoresjoueurs)
+        var compte = Compte()
+        compte.initProperties()
+        compte.connect()
+        var request = ""
+        var resultat = ""
+        var rs: ResultSet
+        var stmt: PreparedStatement
+        var connect = DriverManager.getConnection(compte.url, compte.loginDB, compte.passwordDB)
+        request = "SELECT tour FROM partie" //vérifie à qui c'est le tour
+        stmt = connect.prepareStatement(request)
+        rs = stmt.executeQuery()
+        rs.next()
+        resultat = rs.getString(1)
+        textView1.text = resultat
+        */
+
 
         // Crée une vue pour chaque lettre dans la main du joueur
         playerHand.forEach { letter ->

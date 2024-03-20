@@ -89,7 +89,8 @@ class Jeu {
     fun majBDON(
         compte: Compte,
         joueur: Inventory,
-        id: Int
+        id: Int,
+        plateau : Plateau
     ) { // a faire a la fin de chaque tour de chaque joueur
         compte.connect()
         compte.initProperties()
@@ -105,13 +106,18 @@ class Jeu {
 
         /*
         request = "UPDATE piece SET id_piece=?,lettre=?,X=?,Y=? WHERE id_partie=?" //pièce
-        stmt = connect.prepareStatement(request)
-        stmt.setInt(1, ) //????
-        stmt.setInt(2,points+joueur.getscorePartie()) //??
-        stmt.setString(3, )
-        stmt.setInt(5,id)
-        stmt.executeUpdate()
-         */
+        for(i in 0..14){
+            for(j in 0..14){
+                stmt = connect.prepareStatement(request)
+                stmt.setInt(1, ) //? mettre l'autoincrément dessus
+                stmt.setString(2, plateau.get(i,j))
+                stmt.setInt(3, i)
+                stmt.setInt(4,j)
+                stmt.setInt(5,id)
+                stmt.executeUpdate()
+            }
+        }
+        */
 
         request = "UPDATE pioche SET lettre=?,nbLettre=? WHERE id_partie=?" //pioche
         for (i in 1..pioche.size) {
@@ -142,7 +148,6 @@ class Jeu {
     fun verifTour(compte : Compte): String{
         var request = ""
         var resultat = ""
-        var pseudo = compte.pseudo
         var rs: ResultSet
         var stmt: PreparedStatement
         var connect = DriverManager.getConnection(compte.url, compte.loginDB, compte.passwordDB)
@@ -184,7 +189,7 @@ class Jeu {
             // fin du tour :
             joueur.setPoints(joueur.calculPointsMot(plateauDebutTour, plateauFinTour, this))
             joueur.setScore(joueur.getScore() + joueur.getPoints())
-            majBDON(compte, joueur, id) //maj des données
+            majBDON(compte, joueur, id, plateauFinTour) //maj des données
             request = "UPDATE partie SET tour=? WHERE id=?" //maj du pseudo pour qui c'est le tour
             stmt = connect.prepareStatement(request)
             stmt.setString(1, nextPseudo)
@@ -210,12 +215,7 @@ class Jeu {
         compte.disconnect()
     }
 
-    fun jeu(nbjoueurs: Int, id: Int) {
-
-        //Gestion BDONN
-        var compte = Compte()
-        compte.initProperties()
-        compte.connect()
+    fun jeu(nbjoueurs: Int, id: Int, compte: Compte) {
 
         //Création de la partie
         compte.createNewGame(id, pioche, compte)
