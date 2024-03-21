@@ -1,20 +1,22 @@
 package com.lucas.scrabble
 
+import android.os.Parcel
+import android.os.Parcelable
 import android.util.Log
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.io.FileInputStream
+import java.io.Serializable
 import java.sql.Connection
 import java.sql.DriverManager
 import java.util.Properties
 
-class Compte() {
+class Compte() : Parcelable {
     // Get Properties file
     //val rootPath = Thread.currentThread().getContextClassLoader().getResource("").path
     var properties = Properties()
-
-
+    var auth = false
     var loginDB = ""
     var passwordDB = ""
     var server = ""
@@ -23,6 +25,39 @@ class Compte() {
     var url = ""
     var connection : Connection? = null
 
+    constructor(parcel: Parcel) : this() {
+        auth = parcel.readByte() != 0.toByte()
+        loginDB = parcel.readString() ?: ""
+        passwordDB = parcel.readString() ?: ""
+        server = parcel.readString() ?: ""
+        database = parcel.readString() ?: ""
+        pseudo = parcel.readString() ?: ""
+        url = parcel.readString() ?: ""
+    }
+
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeByte(if (auth) 1 else 0)
+        parcel.writeString(loginDB)
+        parcel.writeString(passwordDB)
+        parcel.writeString(server)
+        parcel.writeString(database)
+        parcel.writeString(pseudo)
+        parcel.writeString(url)
+    }
+
+    override fun describeContents(): Int {
+        return 0
+    }
+
+    companion object CREATOR : Parcelable.Creator<Compte> {
+        override fun createFromParcel(parcel: Parcel): Compte {
+            return Compte(parcel)
+        }
+
+        override fun newArray(size: Int): Array<Compte?> {
+            return arrayOfNulls(size)
+        }
+    }
     fun initProperties(){
         GlobalScope.launch(Dispatchers.IO) {
             /*
@@ -34,6 +69,7 @@ class Compte() {
         val url = "jdbc:postgresql://$server/$database"
         var driver = DriverManager.getDriver(url)
         */
+
             loginDB = "brichlkc"
             passwordDB = "mdpsupersecurise"
             server = "dr-ser-info.ec-nantes.fr:5432"
@@ -69,38 +105,32 @@ class Compte() {
     }
 
 
-    fun authentification(login : String, mdp : String) : Boolean{
+    fun authentification(login : String, mdp : String){
         connect()
         var retour = false
-        if((login=="admin")&&(mdp=="admin")) {
-            retour = true
-        }
-        else {
-            GlobalScope.launch(Dispatchers.IO) {
-                val hash1 = (login + mdp).toByteArray(Charsets.UTF_8).toString()
-                println(hash1)
-                var request = "SELECT mdpHash FROM compte WHERE loginHash=?"
-                var connect = DriverManager.getConnection(url, loginDB, passwordDB)
-                var stmt = connect.prepareStatement(request)
-                stmt.setString(1, login.toByteArray(Charsets.UTF_8).toString())
-                var rs = stmt.executeQuery()
-                if (rs.next()) {
-                    val hash2 = rs.getString(1);
-                    if (hash1 == hash2) {
-                        retour = true
-                    }
+        GlobalScope.launch(Dispatchers.IO) {
+            var request = "SELECT mdpHash FROM compte WHERE loginHash=?"
+            var connect = DriverManager.getConnection(url, loginDB, passwordDB)
+            var stmt = connect.prepareStatement(request)
+            stmt.setString(1, login)
+            var rs = stmt.executeQuery()
+            if (rs.next()) {
+                val hash2 = rs.getString(1)
+                if ((login+mdp) == hash2) {
+                    auth = true
+                    println("ok")
                 }
-                request = "SELECT pseudo FROM compte WHERE loginHash=?"
-                stmt = connect.prepareStatement(request)
-                stmt.setString(1, login.toByteArray(Charsets.UTF_8).toString())
-                rs = stmt.executeQuery()
-                if (rs.next()) {
-                    pseudo = rs.getString(1)
-                }
-                disconnect()
             }
+            request = "SELECT pseudo FROM compte WHERE loginHash=?"
+            stmt = connect.prepareStatement(request)
+            stmt.setString(1, login)
+            rs = stmt.executeQuery()
+            if (rs.next()) {
+                pseudo = rs.getString(1)
+            }
+            disconnect()
+            println(pseudo)
         }
-        return retour
     }
 
     fun editPassword(login : String, newMdp : String){ //que post authentification
@@ -116,16 +146,15 @@ class Compte() {
 
     fun createAccount(login : String, mdp : String, pseudo : String){
         connect()
+        println(login)
         GlobalScope.launch(Dispatchers.IO) {
-            val logmdp = (login + mdp).toByteArray(Charsets.UTF_8).toString()
-            val log = (login).toByteArray(Charsets.UTF_8).toString()
             val request =
                 "INSERT INTO compte(pseudo,mdpHash,points,pointsPartie,loginHash,id_partie) VALUES(?,?,'0','0',?,?)"
             var connect = DriverManager.getConnection(url, loginDB, passwordDB)
             var stmt = connect.prepareStatement(request)
             stmt.setString(1, pseudo)
-            stmt.setString(2, logmdp)
-            stmt.setString(3, log)
+            stmt.setString(2, (login+mdp))
+            stmt.setString(3, login)
             stmt.setInt(4, 1) // a autoincrémenter
             stmt.executeUpdate()
         }
@@ -169,8 +198,9 @@ class Compte() {
 
     // Nouvelle Partie
 
-    fun createNewGame(id : Int, pioche : MutableList<String>, compte: Compte) {
+    fun createNewGame(id : Int, compte: Compte) {
         var connect = DriverManager.getConnection(url, loginDB, passwordDB)
+        var pioche = pioche()
         connect()
         var request = "INSERT INTO partie(id_partie, tour) VALUES(?,?)"
         var stmt = connect.prepareStatement(request)
@@ -198,6 +228,43 @@ class Compte() {
             }
         }
         disconnect()
+    }
+
+    fun pioche(): MutableList<String> {
+        var pioche = mutableListOf<String>()
+        for (i in 1..102) {
+            val lettre = when {
+                9 >= i -> "A"
+                11 >= i -> "B"
+                13 >= i -> "C"
+                16 >= i -> "D"
+                31 >= i -> "E"
+                33 >= i -> "F"
+                35 >= i -> "G"
+                37 >= i -> "H"
+                45 >= i -> "I"
+                46 >= i -> "J"
+                47 >= i -> "K"
+                52 >= i -> "L"
+                55 >= i -> "M"
+                61 >= i -> "N"
+                67 >= i -> "O"
+                69 >= i -> "P"
+                70 >= i -> "Q"
+                76 >= i -> "R"
+                82 >= i -> "S"
+                88 >= i -> "T"
+                94 >= i -> "U"
+                96 >= i -> "V"
+                97 >= i -> "W"
+                98 >= i -> "X"
+                99 >= i -> "Y"
+                100 >= i -> "Z"
+                else -> " "
+            }
+            pioche.add(lettre)
+        }
+        return pioche
     }
 
 //Rejoindre Partie

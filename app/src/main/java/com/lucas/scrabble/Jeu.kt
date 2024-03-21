@@ -217,9 +217,6 @@ class Jeu {
 
     fun jeu(nbjoueurs: Int, id: Int, compte: Compte) {
 
-        //Création de la partie
-        compte.createNewGame(id, pioche, compte)
-
         //Createur rejoint la partie
         rejoindre(compte.pseudo, id)
 
