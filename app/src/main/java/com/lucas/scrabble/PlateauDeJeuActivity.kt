@@ -15,6 +15,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
 import android.widget.GridLayout
+import android.widget.ImageButton
 import android.widget.ImageView
 import org.w3c.dom.Text
 import java.sql.DriverManager
@@ -34,6 +35,12 @@ class PlateauDeJeuActivity : AppCompatActivity() {
         val boardGridLayout: GridLayout = findViewById(R.id.boardGridLayout)
 
         // Création du plateau de jeu
+        var plateauD = Plateau()
+        var plateauF = Plateau()
+        var jeu = Jeu()
+        jeu.initPioche()
+        var inv = Inventory()
+        var nbTours = 0
         for (row in 0 until 15) {
             for (col in 0 until 15) {
                 val textView = TextView(this)
@@ -76,7 +83,8 @@ class PlateauDeJeuActivity : AppCompatActivity() {
         }
 
         val playerHand = player.getMain()*/
-        val playerHand = listOf('A', 'B', 'C', 'D', 'E', 'F', 'G')
+        inv.tirerNLettres(10,jeu.getPioche())
+        var playerHand = inv.getMain()
 
         /*
         var textView1 = findViewById<TextView>(R.id.scoresjoueurs)
@@ -132,16 +140,27 @@ class PlateauDeJeuActivity : AppCompatActivity() {
                     val case = plateauDeJeu.getChildAt(i)
                     case.setOnClickListener {
                         if (selectedLetter != null){
+                            var lettre = (selectedLetter as TextView).text.toString()
+                            var row = 0
+                            var col = 0
                             if ((selectedLetter!!.background as ColorDrawable).color == -1323865 ){
                                 // Placer la lettre sélectionnée dans la case du plateau
                                 selectedLetter!!.setBackgroundColor(ContextCompat.getColor(this, R.color.white))
                                 (it as TextView).text = (selectedLetter as TextView).text
+                                var index = boardGridLayout.indexOfChild(case)
+                                var row = index / boardGridLayout.columnCount
+                                var col = index % boardGridLayout.columnCount
+                                plateauF.setCase(Pair<Int,Int>(row,col), lettre)
                                 selectedLetter = null
                             }
                             else if((selectedLetter!!.background as ColorDrawable).color == -1 ){
                                 if ((selectedLetter!! as TextView).text == (it as TextView).text ){
                                     selectedLetter!!.setBackgroundColor(ContextCompat.getColor(this, R.color.brown))
                                     (it as TextView).text = ""
+                                    var index = boardGridLayout.indexOfChild(case)
+                                    var row = index / boardGridLayout.columnCount
+                                    var col = index % boardGridLayout.columnCount
+                                    plateauF.setCase(Pair<Int,Int>(row,col), "0")
                                     selectedLetter = null
                                 }
                             }
@@ -156,6 +175,17 @@ class PlateauDeJeuActivity : AppCompatActivity() {
         poubelle.setOnClickListener{
             selectedLetter?.setBackgroundColor(ContextCompat.getColor(this, R.color.white))
             selectedLetter = null
+        }
+        var finTour = findViewById<Button>(R.id.btnendtour)
+        var score = findViewById<TextView>(R.id.scoresjoueurs)
+        finTour.setOnClickListener{
+            if(nbTours<10) {
+                println(plateauF.motsAjoutes(plateauD))
+                score.text = "" + (inv.getScore() + inv.calculPointsMot(plateauD, plateauF, jeu))
+                nbTours++
+                plateauD.copier(plateauF)
+            }
+            else{ finish() }
         }
     }
 

@@ -34,7 +34,11 @@ class Plateau {
     val collisionOk = listOf("0", "2L", "3L", "2M", "3M", "CD")
 
     fun copier(plateauACopier: Plateau){
-        this.plateau = plateauACopier.plateau
+        for (i in 0..14){
+            for (j in 0..14){
+                this.plateau[i][j] = plateauACopier.plateau[i][j]
+            }
+        }
     }
 
     /**

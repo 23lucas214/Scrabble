@@ -36,6 +36,10 @@ class Jeu {
         return pointLettre.getOrDefault(l, 0)
     }
 
+    fun getPioche(): MutableList<String>{
+        return pioche
+    }
+
     /**
      * Initialise la pioche en la remplissant des lettres du scrabble
      */

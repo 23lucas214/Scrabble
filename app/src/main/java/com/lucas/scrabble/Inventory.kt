@@ -23,6 +23,10 @@ class Inventory {
     fun getMain(): MutableList<String>{
         return main
     }
+
+    fun resetMain(){
+        this.main = mutableListOf()
+    }
     fun getScore(): Int{
         return score
     }
@@ -65,32 +69,35 @@ class Inventory {
                 }
             }
         }
-        val mot = plateauFinTour.motsAjoutes(plateauDebutTour).get(0)
-        var scoreMot = 0
-        var multiplicateurLettre = 1
-        var multiplicateurMot = 1
-        var contenu: String
-        var position: Pair<Int,Int>
-        for (k in 1..mot.second.size-1) {
-            position = mot.second.get(k)
-            contenu = plateauDebutTour.getCase(position)
-            if ((contenu != "2M") && (contenu != "3M")) {
-                multiplicateurLettre = when {
-                    contenu == "2L" -> 2
-                    contenu == "3L" -> 3
-                    else -> 1
+        if(plateauFinTour.motsAjoutes(plateauDebutTour).isNotEmpty()) {
+            val mot = plateauFinTour.motsAjoutes(plateauDebutTour).get(0)
+            var scoreMot = 0
+            var multiplicateurLettre = 1
+            var multiplicateurMot = 1
+            var contenu: String
+            var position: Pair<Int, Int>
+            for (k in 0..mot.second.size - 1) {
+                position = mot.second.get(k)
+                contenu = plateauDebutTour.getCase(position)
+                if ((contenu != "2M") && (contenu != "3M")) {
+                    multiplicateurLettre = when {
+                        contenu == "2L" -> 2
+                        contenu == "3L" -> 3
+                        else -> 1
+                    }
+                } else if (contenu == "2M") {
+                    multiplicateurMot = 2
+                } else {
+                    multiplicateurMot = 3
                 }
-            } else if (contenu == "2M") {
-                multiplicateurMot= 2
-            } else {
-                multiplicateurMot = 3
+                scoreMot += multiplicateurLettre * jeu.lettrePoints(mot.first[k].toString())
+                multiplicateurLettre = 1
             }
-            scoreMot += multiplicateurLettre * jeu.lettrePoints(mot.first[k].toString())
-            multiplicateurLettre = 1
+            val scrabble = if (lettrePosees == 7) 1 else 0
+            score += scoreMot * multiplicateurMot + scrabble * 50
+            return scoreMot * multiplicateurMot + scrabble * 50
         }
-        val scrabble = if(lettrePosees==7) 1 else 0
-        score += scoreMot * multiplicateurMot + scrabble * 50
-        return scoreMot * multiplicateurMot + scrabble * 50
+        else { return 0}
     }
 
     /**
